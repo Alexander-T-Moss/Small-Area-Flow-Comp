@@ -9,8 +9,8 @@ class Program
         string[] gcodeLines = File.ReadAllLines(slicerGcodeFilePath);
 
         // Flags that are checked for in slicer gcode
-        string[] slicerInfillFlags = { ";TYPE:Solid infill", ";TYPE:Top solid infill" };
-        string[] slicerGenericFlags = { ";TYPE:" };
+        string[] slicerInfillFlags = { ";TYPE:Solid infill", ";TYPE:Top solid infill", "; FEATURE: Top surface", "; FEATURE: Internal solid infill", "; FEATURE: Bottom surface"};
+        string[] slicerGenericFlags = { ";TYPE:" , "; FEATURE:"};
 
         bool adjustingFlow = false;
 
@@ -22,7 +22,6 @@ class Program
         {
             // Update current tool position
             Vector2 currentToolPos = flowMaths.UpdateToolPos(gcodeLines[index], previousToolPos);
-
 
             // Check if it's reading infill gcdoe that needs modified
             if (slicerInfillFlags.Contains(gcodeLines[index]))
@@ -44,21 +43,33 @@ class Program
                 double oldFlowVal = -1f;
                 double newFlowVal = -1f;
 
-                string[] gcodeLineSegments = gcodeLines[index].Split(' ');
+                string[] gcodeLineSegments = gcodeLines[index].Trim().Split(' ');
 
                 // Loop through each segment of gcode
                 for (int i = 0; i < gcodeLineSegments.Count(); i++)
                 {
-                    // Check if the segment begins with E (extrusion gcode)
-                    if (gcodeLineSegments[i][0] == 'E')
+                    // Check for padding spaces
+                    if(gcodeLineSegments[i].Length > 0)
                     {
-                        oldFlowVal = Convert.ToDouble(gcodeLineSegments[i].Substring(1));
-
-                        // Check if E value isn't a retraction
-                        if (oldFlowVal > 0f)
+                        // Check if the segment begins with E (extrusion gcode)
+                        if (gcodeLineSegments[i][0] == 'E')
                         {
-                            newFlowVal = flowMaths.ModifyFlow(flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos), oldFlowVal);
-                            gcodeLineSegments[i] = "E" + newFlowVal.ToString("N5");
+                            // Converts whatever is after the E (and if it fails, catches the error)
+                            try
+                            {
+                                oldFlowVal = Convert.ToDouble(gcodeLineSegments[i].Substring(1));
+                            }
+                            catch (Exception FormatException)
+                            {
+                                Console.WriteLine(FormatException.Message);
+                            }
+
+                            // Check if E value isn't a deretraction or wipe
+                            if (oldFlowVal > 0f)
+                            {
+                                newFlowVal = flowMaths.ModifyFlow(flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos), oldFlowVal);
+                                gcodeLineSegments[i] = "E" + newFlowVal.ToString("N5");
+                            }
                         }
                     }
                 }
@@ -110,19 +121,25 @@ class FlowMaths
     {
         float xPos = -999, yPos = -999;
 
+        // Check gcode line isn't a blank line
         if (gcodeLine.Length != 0)
         {
+            // Check the gcode line isn't just a comment
             if (gcodeLine[0] != ';')
             {
-                string[] gcodeSegments = gcodeLine.Split(' ');
+                string[] gcodeSegments = gcodeLine.Trim().Split(' ');
 
                 foreach (string segment in gcodeSegments)
                 {
-                    if (segment[0] == 'X' || segment[0] == 'x')
-                        xPos = (float)Convert.ToDouble(segment.Substring(1));
+                    // Check segment isn't blank
+                    if(segment.Length != 0)
+                    {
+                        if (segment[0] == 'X' || segment[0] == 'x')
+                            xPos = (float)Convert.ToDouble(segment.Substring(1));
 
-                    else if (segment[0] == 'Y' || segment[0] == 'y')
-                        yPos = (float)Convert.ToDouble(segment.Substring(1));
+                        else if (segment[0] == 'Y' || segment[0] == 'y')
+                            yPos = (float)Convert.ToDouble(segment.Substring(1));
+                    }
                 }
             }
         }

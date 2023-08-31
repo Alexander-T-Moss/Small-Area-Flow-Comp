@@ -2,7 +2,6 @@
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/SmallAreaFlowComp.deps.json
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/SmallAreaFlowComp.runtimeconfig.json
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/SmallAreaFlowComp.dll
-/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/SmallAreaFlowComp.pdb
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/Microsoft.CSharp.dll
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/Microsoft.VisualBasic.Core.dll
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/Microsoft.VisualBasic.dll
@@ -193,6 +192,7 @@
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/obj/Release/net7.0/win-x64/SmallAreaFlowComp.csproj.CopyComplete
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/obj/Release/net7.0/win-x64/SmallAreaFlowComp.dll
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/obj/Release/net7.0/win-x64/refint/SmallAreaFlowComp.dll
-/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/obj/Release/net7.0/win-x64/SmallAreaFlowComp.pdb
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/obj/Release/net7.0/win-x64/SmallAreaFlowComp.genruntimeconfig.cache
 /Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/obj/Release/net7.0/win-x64/ref/SmallAreaFlowComp.dll
+/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/SmallAreaFlowComp.pdb
+/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/obj/Release/net7.0/win-x64/SmallAreaFlowComp.pdb
