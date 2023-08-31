@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "vLZyLgtb9Flk+7T7egjqVKYnUUzqsVha5ElLMDf/93vSGUoJFjOOe8aORuAqStxGNnoW43QYgPAIbcpR1CYk3w==",
+  "success": true,
+  "projectFilePath": "/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/SmallAreaFlowComp.csproj",
+  "expectedPackageFiles": [
+    "/Users/alexanderthorunnarson-moss/.nuget/packages/microsoft.netcore.app.runtime.win-x64/7.0.7/microsoft.netcore.app.runtime.win-x64.7.0.7.nupkg.sha512",
+    "/Users/alexanderthorunnarson-moss/.nuget/packages/microsoft.aspnetcore.app.runtime.win-x64/7.0.7/microsoft.aspnetcore.app.runtime.win-x64.7.0.7.nupkg.sha512",
+    "/Users/alexanderthorunnarson-moss/.nuget/packages/microsoft.netcore.app.host.win-x64/7.0.7/microsoft.netcore.app.host.win-x64.7.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}
