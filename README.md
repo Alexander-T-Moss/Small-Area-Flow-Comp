@@ -1,5 +1,5 @@
 # DISCLAIMER - PLEASE READ
-**Use this script at your own risk**. It has been tested to a point where I feel it is safe for public testing, but your mileage may vary. Until indicated on this readme otherwise, I strongly recommend **only printing test pieces** you don't mind if corrupt gcode causes it to fail! Flow maths is hard, and this is just a bodge for a larger issue with current slicer flow maths. With that disclaimer out the way, let's dive right in!
+**Use this script at your own risk**. It has been tested to a point where I feel it is safe for public testing, but your mileage may vary. I personally recommend **only printing test pieces** you don't mind having print issues with! Flow maths is hard, and this is just a bodge for a larger, mysterious issue. With that disclaimer out the way, let's dive right in!
 
 
 
@@ -7,17 +7,17 @@
 
 For information on the tests you can conduct, please follow the link [here](/TestingAssets). For information on the script in general, keep reading below (*including how to set it up*)
 
-![demo_animation](/Screenshots/demo_animation.gif)
+![demo_cw1_body](/Screenshots/demo_cw1_body.png)
 
-The example above used very extreme parameters to show the flow compensation, you will not see this extreme
+The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode
 
 
 
 # What Is The Goal Here?
 
-Chances are, you've found that small areas of solid infill appear to be over-extruded, despite the rest of a print looking like it has a well-dialled-in EM/Flow. It is suspected that the main culprit for this is the model slicers used to determine the cross-section of an extrusion line. 
+Chances are, you've found that small areas of solid infill appear to be over-extruded, despite the rest of a print looking like it has a well-dialled-in EM/Flow. Without a good understanding of why this happens, this is a brute force approach to treat the symptom.
 
-So, to combat this, I have created a script to modify the flow of extrusion lines inversely proportional to the length of the extrusion line (*shorter the extrusion, the less flow it should have*). Does this work then? Well, that's where you and the testing of this script comes in!
+I have created a script to modify the flow of extrusion lines inversely proportional to the length of the extrusion line (*shorter the extrusion, the less flow it should have*). Does this work then? Well, that's where you and the testing of this script comes in!
 
 From preliminary testing, I have noticed some improvements in my small area solid infill, but this is a sample size of 1, me, so like all good scientific hypothesis testing, we need more samples to confirm whether or not this script actually works as expected!
 
