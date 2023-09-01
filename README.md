@@ -1,7 +1,3 @@
----
-typora-copy-images-to: ./Screenshots
----
-
 # DISCLAIMER - PLEASE READ
 **Use this script at your own risk**. It has been tested to a point where I feel it is safe for public testing, but your milage may vary. Until indicated on this readme otherwise, I strongly recommend **only printing test pieces** you don't mind if corrupt gcode causes it to fail! Flow maths is hard, and this is just a bodge for a larger issue with current slicer flow maths. With that disclaimer out the way, lets dive right in!
 
@@ -9,7 +5,7 @@ typora-copy-images-to: ./Screenshots
 
 # Information On Beta Testing
 
-For information on the tests you can conduct, please follow the link here. For information on the script in general, keep reading below (including how to set it up)
+For information on the tests you can conduct, please follow the link here. For information on the script in general, keep reading below (*including how to set it up*)
 
 
 
