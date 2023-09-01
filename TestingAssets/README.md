@@ -11,6 +11,8 @@ Top Solid Infill Accel: 10,000 mm/s^2
 Top Fill Pattern: Monotonic Lines (Unconnected although the flow comp may compensate for connected lines!)
 Top/Bottom Layer Count: 5
 ```
+However feel free to use your own settings during the testing (the ones above are an optional guide)
+
 
 # BETA Test Objectives
 
