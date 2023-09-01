@@ -11,8 +11,6 @@ Top Solid Infill Accel: 10,000 mm/s^2
 Top Fill Pattern: Monotonic Lines (Unconnected although the flow comp may compensate for connected lines!)
 Top/Bottom Layer Count: 5
 ```
-[test_print](/Screenshots/test_print.jpg)
-
 
 # BETA Test Objectives
 
@@ -33,4 +31,8 @@ The two main indicators of proper flow on smaller infill areas are visual and ta
 I would really like to see photos of what prints you get in [this channel](link.to.channel) (the channel is not just for posting issues) but obviously, you are under no obligation to do this, and if you just want to try it out independently, you are more than welcome to :)
 
 
+# Test Print
+Here is a photo of an initial test of the script
 
+
+![test_print](/Screenshots/test_print.jpg)
