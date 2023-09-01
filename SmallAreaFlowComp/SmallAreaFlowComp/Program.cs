@@ -93,14 +93,24 @@ class Program
 // Class to handle all the flow maths etc.
 class FlowMaths
 {
-    // Smaller value increases the amount of flow reduction
-    const int flowModifier = 4;
+    // Length at which extrusion modifer is no longer applied
+    const int maxModifiedLength = 20;
+    
+    // Min percentage flow is reduced to
+    const double minFlowPercent = 0.3f;
+
+    // How exponential the flow drop off is (multiple of 2)
+    const int flowDropOff = 24;
+
+
 
     private double flowCompModel(double extrusionLength)
     {
-        if(extrusionLength == 0)
+        if(extrusionLength == 0 || extrusionLength > maxModifiedLength)
             return 1;
-        return 1 / -(flowModifier * extrusionLength + 1) + 1;
+
+        double magicNumber = (minFlowPercent-1) * Math.Pow(maxModifiedLength, -1 * flowDropOff);
+        return magicNumber * Math.Pow(extrusionLength-maxModifiedLength, flowDropOff) + 1;
     }
 
     // Applies flow compensation model

@@ -5,7 +5,11 @@
 
 # Information On Beta Testing
 
-For information on the tests you can conduct, please follow the link here. For information on the script in general, keep reading below (*including how to set it up*)
+For information on the tests you can conduct, please follow the link [here](link.here). For information on the script in general, keep reading below (*including how to set it up*)
+
+![Screen Recording 2023-09-01 at 14.03.28](/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/Screenshots/Screen Recording 2023-09-01 at 14.03.28.gif)
+
+The example above was using very extreme parameters to show the flow compensation, you will not see this extreme
 
 
 
@@ -57,7 +61,7 @@ The first thing you need is the script for your relavent platform (`win`, `osx_i
 
 ---
 
-Ping me on discord and I'll see what can be done :)
+Ping me (*alexandertmoss*) on discord and I'll see what can be done :)
 
 
 
@@ -65,7 +69,7 @@ Ping me on discord and I'll see what can be done :)
 
 # HELP! It's Not Working 
 
-To help diagnose the issues quicker, please provide the information (*if possible*) below for your relavent issue on the channel in VORONDesign. (*You'll get quicker responses there than if you submit an issue on GitHub*)
+To help diagnose the issues quicker, please provide the information (*if possible*) below for your issue on the [channel in VORONDesign](link.to.channel). (*You'll get quicker responses there than if you submit an issue on GitHub*)
 
 
 
@@ -76,7 +80,7 @@ To help diagnose the issues quicker, please provide the information (*if possibl
 Slicers only run the script when exporting the gcode, not when it's slicing the file. If possible to help us diagnose the issue, please provide the following information:
 
 1. A screenshot (*or ideally copy/paste of the error text in a code block*) of the error the slicer throws
-2. If a terminal windows pops up, a copy of the error in that window (*doesn't always show up*)
+2. If a terminal windows pops up, a copy of the error in that window (*won't always show up*)
 
 
 

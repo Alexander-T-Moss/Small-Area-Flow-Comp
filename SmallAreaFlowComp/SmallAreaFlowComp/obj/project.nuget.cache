@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "9JLwFlN05sog4cGVgroXt+hx6HiiJE4I7gvWPDJRPCWaSHSPjVKvKyXqMOJZZqfb5ch0IzYsigcWx5ZXpow2TQ==",
+  "dgSpecHash": "aZRuMjSAeHj7UDBzdjZK/YE2vXaIt3TKSMKgKoUSm4GPHba8onER9h/Sw3mw7CNF7096C8PEJS4qhKviHHpu9A==",
   "success": true,
   "projectFilePath": "/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/SmallAreaFlowComp.csproj",
   "expectedPackageFiles": [
-    "/Users/alexanderthorunnarson-moss/.nuget/packages/microsoft.netcore.app.runtime.osx-arm64/7.0.7/microsoft.netcore.app.runtime.osx-arm64.7.0.7.nupkg.sha512",
-    "/Users/alexanderthorunnarson-moss/.nuget/packages/microsoft.aspnetcore.app.runtime.osx-arm64/7.0.7/microsoft.aspnetcore.app.runtime.osx-arm64.7.0.7.nupkg.sha512"
+    "/Users/alexanderthorunnarson-moss/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/7.0.7/microsoft.netcore.app.runtime.linux-x64.7.0.7.nupkg.sha512",
+    "/Users/alexanderthorunnarson-moss/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/7.0.7/microsoft.aspnetcore.app.runtime.linux-x64.7.0.7.nupkg.sha512",
+    "/Users/alexanderthorunnarson-moss/.nuget/packages/microsoft.netcore.app.host.linux-x64/7.0.7/microsoft.netcore.app.host.linux-x64.7.0.7.nupkg.sha512"
   ],
   "logs": []
 }
