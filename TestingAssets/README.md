@@ -11,7 +11,14 @@ Top Solid Infill Accel: 10,000 mm/s^2
 Top Fill Pattern: Monotonic Lines (Unconnected although the flow comp may compensate for connected lines!)
 Top/Bottom Layer Count: 5
 ```
+
 However, feel free to use your own settings during the testing (the ones above are an optional guide)
+
+
+
+# More Cool G-Code
+
+![demo_animation](/Screenshots/demo_animation.gif)
 
 
 
@@ -35,7 +42,7 @@ I would really like to see photos of what prints you get in [this channel](link.
 
 # Test STL Files
 
-There is nothing special about these files for the most part, they just have some top surfaces of various sizes that test the script well. You can print anything you want with the script, but as per the disclosure, I only recommend printing test pieces you don't mind failing do to currupt gcode. Details about the test STLs and some guidence on printing them can be found below:
+There is nothing special about these files for the most part, they just have some top surfaces of various sizes that test the script well. You can print anything you want with the script, it would be pretty bad if it only worked with these STLs
 
 
 
