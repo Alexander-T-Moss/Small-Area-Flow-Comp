@@ -21,7 +21,6 @@ During this beta test programme, there are 3 main objectives that need testing
 3. Error proofing in the **script is robust** enough to handle, and **correctly process a variety of gcode**
 
 
-
 # How Do I Help In This BETA Test?
 
 Obviously, to test the first objective, you just need to download a script and confirm it runs properly and modifies the gcode. To test the other objectives you just need to print something twice, once with, and once without the script and compare the models.
@@ -29,10 +28,3 @@ Obviously, to test the first objective, you just need to download a script and c
 The two main indicators of proper flow on smaller infill areas are visual and tactile. The latter is a much better indicator as on small infill areas, the pattern of extrusion lines can often be quite misleading, so if the surface feels smooth, despite looking rough, then the flow is correctly compensated.
 
 I would really like to see photos of what prints you get in [this channel](link.to.channel) (the channel is not just for posting issues) but obviously, you are under no obligation to do this, and if you just want to try it out independently, you are more than welcome to :)
-
-
-# Test Print
-Here is a photo of an initial test of the script
-
-
-![test_print](/Screenshots/test_print.jpg)
