@@ -5,7 +5,7 @@
 
 # Information On Beta Testing
 
-For information on the tests you can conduct, please follow the link [here](link.here). For information on the script in general, keep reading below (*including how to set it up*)
+For information on the tests you can conduct, please follow the link [here](/TestingAssets). For information on the script in general, keep reading below (*including how to set it up*)
 
 ![demo_animation](/Screenshots/demo_animation.gif)
 
