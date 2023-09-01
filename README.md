@@ -38,7 +38,7 @@ The first thing you need is the script for your relavent platform (`win`, `osx_i
 
 
 
-### PrusaSlicer/SuperSlicer
+## PrusaSlicer/SuperSlicer
 
 1. Navigate to `Post-processing scripts` via `Print Settings >> Output options` 
 2. Paste the path to your script in the text field (*see screenshot below, file path will differ*)
@@ -47,7 +47,7 @@ The first thing you need is the script for your relavent platform (`win`, `osx_i
 
 
 
-### BambuStudio/OrcaSlicer
+## BambuStudio/OrcaSlicer
 
 1. Navigate to `Post-processing scripts` via `Others >> Scroll down to the bottom` (*Advanced settings need to be on*) 
 2. Paste the path to your script in the text field (*see screenshot below, file path will differ*)
@@ -68,9 +68,7 @@ To help diagnose the issues quicker, please provide the information (*if possibl
 
 
 
-### Slicer Issue When Exporting G-Code?  
-
----
+## Slicer Issue When Exporting G-Code?  
 
 Slicers only run the script when exporting the gcode, not when it's slicing the file. If possible to help us diagnose the issue, please provide the following information:
 
@@ -79,9 +77,7 @@ Slicers only run the script when exporting the gcode, not when it's slicing the 
 
 
 
-### Issue With G-Code When Printing?  
-
----
+## Issue With G-Code When Printing?  
 
 **The chances are the bug you've found has already been squashed, so check the release notes of any new versions beforehand!**
 
