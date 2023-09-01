@@ -36,7 +36,7 @@ During this beta test programme, there are 3 main objectives that need testing
 
 The two main indicators of proper flow on smaller infill areas are visual and tactile. The latter is a much better indicator as on small infill areas, the pattern of extrusion lines can often be quite misleading, so if the surface feels smooth, despite looking rough, then the flow is correctly compensated.
 
-I would really like to see photos of what prints you get in [this channel](link.to.channel) (the channel is not just for posting issues) but obviously, you are under no obligation to do this, and if you just want to try it out independently, you are more than welcome to :)
+I would really like to see photos of what prints you get in [this channel](link.to.channel), extra brownie points for the best (and worst) results!
 
 
 
@@ -48,16 +48,16 @@ There is nothing special about these files for the most part, they just have som
 
 ### Modified_Voron_Filament_Card.stl
 
-This file is a slight edit of the [voron filament card](https://github.com/VoronDesign/Voron-2/blob/Voron2.4/STLs/Test_Prints/Filament_Card.stl), it is made slightly thicker to mitigate any first layer over squish travelling through the print affecting top surfaces
+This file is a slight edit of the [voron filament card](https://github.com/VoronDesign/Voron-2/blob/Voron2.4/STLs/Test_Prints/Filament_Card.stl), it is made slightly thicker to mitigate any first layer over squish/extrusion travelling through the print affecting top surfaces
 
 
 
 ### centre_brace_8x_wago.stl
 
-This is a file from my [custom V0 project](https://github.com/Alexander-T-Moss/Hex-Zero), I recommend printing it with 2 perimeters as will make lots of long thin infill areas
+This is a file from my [custom V0 project](https://github.com/Alexander-T-Moss/Hex-Zero) (go check it out, *wink wink*), I recommend printing it with 2 perimeters as will make lots of long thin infill areas that are normally quite difficult to print well
 
 
 
 ### cw1_extruder_body.stl
 
-This is the body of the [CW1 extruder](https://docs.vorondesign.com/hardware.html#mini-stealthburner), I used this in my testing initially as was shown on ellis3dp andI thought it would make a good point to start testing
+This is the body of the [CW1 extruder](https://docs.vorondesign.com/hardware.html#mini-stealthburner), I used this in my testing initially as was shown on ellis3dp and I thought it would make a good point to start testing

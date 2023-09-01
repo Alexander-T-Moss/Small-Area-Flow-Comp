@@ -95,5 +95,5 @@ These issues include when a print fails or doesn't print as expected. If possibl
 
 **Weaslus**: Proof Reader, Hypeman & Pestered Me Into Making This
 
-**Donut Man**: They Were Here Too (Also A Hypeman)
+**Donut Man**: They Were Here Too (Also A Hypeman, Well I'm Not Sure If He's Old Enough To Be A Hypeman, Maybe A Hypeboy)
 
