@@ -14,6 +14,7 @@ Top/Bottom Layer Count: 5
 However, feel free to use your own settings during the testing (the ones above are an optional guide)
 
 
+
 # BETA Test Objectives
 
 During this beta test programme, there are 3 main objectives that need testing
@@ -23,8 +24,33 @@ During this beta test programme, there are 3 main objectives that need testing
 3. Error proofing in the **script is robust** enough to handle, and **correctly process a variety of gcode**
 
 
+
 # How Do I Know The Script Is Working?
 
 The two main indicators of proper flow on smaller infill areas are visual and tactile. The latter is a much better indicator as on small infill areas, the pattern of extrusion lines can often be quite misleading, so if the surface feels smooth, despite looking rough, then the flow is correctly compensated.
 
 I would really like to see photos of what prints you get in [this channel](link.to.channel) (the channel is not just for posting issues) but obviously, you are under no obligation to do this, and if you just want to try it out independently, you are more than welcome to :)
+
+
+
+# Test STL Files
+
+There is nothing special about these files for the most part, they just have some top surfaces of various sizes that test the script well. You can print anything you want with the script, but as per the disclosure, I only recommend printing test pieces you don't mind failing do to currupt gcode. Details about the test STLs and some guidence on printing them can be found below:
+
+
+
+### Modified_Voron_Filament_Card.stl
+
+This file is a slight edit of the [voron filament card](https://github.com/VoronDesign/Voron-2/blob/Voron2.4/STLs/Test_Prints/Filament_Card.stl), it is made slightly thicker to mitigate any first layer over squish travelling through the print affecting top surfaces
+
+
+
+### centre_brace_8x_wago.stl
+
+This is a file from my [custom V0 project](https://github.com/Alexander-T-Moss/Hex-Zero), I recommend printing it with 2 perimeters as will make lots of long thin infill areas
+
+
+
+### cw1_extruder_body.stl
+
+This is the body of the [CW1 extruder](https://docs.vorondesign.com/hardware.html#mini-stealthburner), I used this in my testing initially as was shown on ellis3dp andI thought it would make a good point to start testing
