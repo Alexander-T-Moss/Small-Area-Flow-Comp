@@ -7,7 +7,7 @@ Use this script at your own risk. It has been tested to a point where I feel it 
 
 ![demo_cw1_body](/Screenshots/demo_cw1_body.png)
 
-The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode (*the areas that are more blue have less flow*)
+The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode (*the areas that are more blue have less flow*) This screenshot very clearly shows the script at work
 
 
 
@@ -15,7 +15,7 @@ The example above used very extreme parameters to show the flow compensation, yo
 
 Chances are, you've found that small areas of solid infill appear to be over-extruded, despite the rest of a print looking like it has a well-dialled-in EM/Flow, otherwise why would you be reading this? Currently there isn't a good understanding of why this happens, so this is an attempt at a brute force approach to treat the symptom.
 
-I have created a script to modify the flow of extrusion lines inversely proportional to the length of the extrusion line (*shorter the extrusion, the less flow it should have*). Does this work then? Well, that's where you and the testing of this script comes in!
+I've created a script to modify the flow of extrusion lines inversely proportional to the length of the extrusion line (*shorter the extrusion, the less flow it should have*). Does this work then? Well, that's where you and the testing of this script comes in!
 
 From preliminary testing, I have noticed some improvements in my small area solid infill, but this is a sample size of 1, me, so like all good scientific hypothesis testing, I need more samples to confirm whether or not this script actually works as expected!
 
@@ -91,5 +91,5 @@ These issues include when a print fails or doesn't print as expected. If possibl
 
 **Weaslus**: Proof Reader, Hypeman & Pestered Me Into Making This
 
-**Donut Man**: They Were Here Too
+**Donut Man**: They Were Here Too (Also Started A Script, R.I.P.)
 

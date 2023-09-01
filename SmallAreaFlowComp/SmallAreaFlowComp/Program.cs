@@ -94,13 +94,13 @@ class Program
 class FlowMaths
 {
     // Length at which extrusion modifer is no longer applied
-    const int maxModifiedLength = 20;
+    const int maxModifiedLength = 17;
     
     // Min percentage flow is reduced to
     const double minFlowPercent = 0.3f;
 
     // How exponential the flow drop off is (multiple of 2)
-    const int flowDropOff = 24;
+    const int flowDropOff = 12;
 
 
 
