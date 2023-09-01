@@ -7,7 +7,7 @@
 
 For information on the tests you can conduct, please follow the link [here](link.here). For information on the script in general, keep reading below (*including how to set it up*)
 
-![Screen Recording 2023-09-01 at 14.03.28](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Screenshots/Screen%20Recording%202023-09-01%20at%2014.03.28.gif)
+![Screen Recording 2023-09-01 at 14.03.28](/Screenshots/demo_animation.gif)
 
 The example above used very extreme parameters to show the flow compensation, you will not see this extreme
 
@@ -28,7 +28,7 @@ From preliminary testing, I have noticed some improvements in my small area soli
 
 This screenshot shows what is going on really well. The flow is visualized as the more blue, the less flow (and the more red, the more flow). As you can see, where the infill lines get shorter, the lines get bluer, thus indicating they have less flow (and in theory shouldn't show signs of over-extrusion)
 
-![img](https://cdn.discordapp.com/attachments/1120959178408726568/1146559708455510056/image.png)
+![img](/Screenshots/demo_square.png)
 
 
 
@@ -43,7 +43,7 @@ The first thing you need is the script for your relavent platform (`win`, `osx_i
 1. Navigate to `Post-processing scripts` via `Print Settings >> Output options` 
 2. Paste the path to your script in the text field (*see screenshot below, file path will differ*)
 
-![image-20230901093740545](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Screenshots/image-20230901093740545.png)
+![image-20230901093740545](/Screenshots/ps_post_process.png)
 
 
 
@@ -52,7 +52,7 @@ The first thing you need is the script for your relavent platform (`win`, `osx_i
 1. Navigate to `Post-processing scripts` via `Others >> Scroll down to the bottom` (*Advanced settings need to be on*) 
 2. Paste the path to your script in the text field (*see screenshot below, file path will differ*)
 
-![image-20230901093729295](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Screenshots/image-20230901093729295.png)
+![image-20230901093729295](/Screenshots/bambustudio_post_process.png)
 
 ### Don't See Your Slicer? 
 
