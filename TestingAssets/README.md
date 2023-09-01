@@ -34,6 +34,8 @@ During this beta test programme, there are 3 main objectives that need testing
 
 # How Do I Know The Script Is Working?
 
+Assuming the slicer doesn't throw any errors, if you search the gcode file for `old value` it should show modified gcode lines
+
 The two main indicators of proper flow on smaller infill areas are visual and tactile. The latter is a much better indicator as on small infill areas, the pattern of extrusion lines can often be quite misleading, so if the surface feels smooth, despite looking rough, then the flow is correctly compensated.
 
 I would really like to see photos of what prints you get in [this channel](link.to.channel), extra brownie points for the best (and worst) results!
