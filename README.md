@@ -3,7 +3,7 @@ Hey fellow 3DP Enthusiast who has fallen down the rabbit hole of tuning their 3D
 ---
 
 # DISCLAIMER - PLEASE READ
-Use this script at your own risk. It has been tested to a point where I feel it is safe for public testing, but your mileage may vary. I personally recommend only printing test pieces you don't mind having print issues with! Not just those found here, but play around. Failiure is how we learn, please fail in new and exciting ways for me.
+Use this script at your own risk. It has been tested to a point where I feel it is safe for public testing, but your mileage may vary. I personally recommend only printing test pieces you don't mind having print issues with! Not just those found here, but play around. Failure is how we learn, please fail in new and exciting ways for me.
 
 
 
@@ -17,7 +17,7 @@ The example above used very extreme parameters to show the flow compensation, yo
 
 # What Is The Goal Here?
 
-Chances are, you've found that small areas of solid infill appear to be over-extruded, despite the rest of a print looking like it has a well-dialled-in EM/Flow, otherwise why would you be reading this? Currently there isn't a good understanding of why this happens, so this is an attempt at a brute force approach to treat the symptom.
+Chances are, you've found that small areas of solid infill appear to be over-extruded, despite the rest of a print looking like it has a well-dialled-in EM/Flow, otherwise why would you be reading this? Currently, there isn't a good understanding of why this happens, so this is an attempt at a brute-force approach to treat the symptom.
 
 I've created a script to modify the flow of extrusion lines inversely proportional to the length of the extrusion line (*shorter the extrusion, the less flow it should have*). Does this work then? Well, that's where you and the testing of this script comes in!
 
@@ -36,7 +36,7 @@ This screenshot shows what is going on really well. The flow is visualized as th
 
 # How Do I Use This Script
 
-The first thing you need is the script for your relavent platform (`win`, `osx_intel`, `osx_arm`, `linux`), so download the one you need from the latest release. When saving it on your computer, the file path to the script **cannot have spaces in it**, so any folders it goes in cannot have spaces, then follow the steps for your relevant slicer below:
+The first thing you need is the script for your relevant platform (`win`, `osx_intel`, `osx_arm`, `linux`), so download the one you need from the latest release. When saving it on your computer, the file path to the script **cannot have spaces in it**, so any folders it goes in cannot have spaces, then follow the steps for your relevant slicer below:
 
 
 
