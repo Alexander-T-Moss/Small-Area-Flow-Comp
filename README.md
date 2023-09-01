@@ -23,6 +23,8 @@ I've created a script to modify the flow of extrusion lines inversely proportion
 
 From preliminary testing, I have noticed some improvements in my small area solid infill, but this is a sample size of 1, me, so like all good scientific hypothesis testing, I need more samples to confirm whether or not this script actually works as expected!
 
+For more testing specific info, there is another readme [here](/TestingAssets), this one was starting to get a bit too long...
+
 
 
 
