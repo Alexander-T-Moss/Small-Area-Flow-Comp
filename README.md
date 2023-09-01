@@ -1,25 +1,23 @@
 # DISCLAIMER - PLEASE READ
-**Use this script at your own risk**. It has been tested to a point where I feel it is safe for public testing, but your mileage may vary. I personally recommend **only printing test pieces** you don't mind having print issues with! Flow maths is hard, and this is just a bodge for a larger, mysterious issue. With that disclaimer out the way, let's dive right in!
+Use this script at your own risk. It has been tested to a point where I feel it is safe for public testing, but your mileage may vary. I personally recommend only printing test pieces you don't mind having print issues with! Not just those found here, but play around. Failiure is how we learn, please fail in new and exciting ways for me.
 
 
 
-# Information On Beta Testing
-
-For information on the tests you can conduct, please follow the link [here](/TestingAssets). For information on the script in general, keep reading below (*including how to set it up*)
+# Cool Looking G-Code
 
 ![demo_cw1_body](/Screenshots/demo_cw1_body.png)
 
-The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode
+The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode (*the areas that are more blue have less flow*)
 
 
 
 # What Is The Goal Here?
 
-Chances are, you've found that small areas of solid infill appear to be over-extruded, despite the rest of a print looking like it has a well-dialled-in EM/Flow. Without a good understanding of why this happens, this is a brute force approach to treat the symptom.
+Chances are, you've found that small areas of solid infill appear to be over-extruded, despite the rest of a print looking like it has a well-dialled-in EM/Flow, otherwise why would you be reading this? Currently there isn't a good understanding of why this happens, so this is an attempt at a brute force approach to treat the symptom.
 
 I have created a script to modify the flow of extrusion lines inversely proportional to the length of the extrusion line (*shorter the extrusion, the less flow it should have*). Does this work then? Well, that's where you and the testing of this script comes in!
 
-From preliminary testing, I have noticed some improvements in my small area solid infill, but this is a sample size of 1, me, so like all good scientific hypothesis testing, we need more samples to confirm whether or not this script actually works as expected!
+From preliminary testing, I have noticed some improvements in my small area solid infill, but this is a sample size of 1, me, so like all good scientific hypothesis testing, I need more samples to confirm whether or not this script actually works as expected!
 
 
 
@@ -70,7 +68,7 @@ To help diagnose the issues quicker, please provide the information (*if possibl
 
 ## Slicer Issue When Exporting G-Code?  
 
-Slicers only run the script when exporting the gcode, not when it's slicing the file. If possible to help us diagnose the issue, please provide the following information:
+Slicers only run the script when exporting the gcode, not when it's slicing the file. If possible to help me diagnose the issue, please provide the following information:
 
 1. A screenshot (*or ideally copy/paste of the error text in a code block*) of the error the slicer throws
 2. If a terminal window pops up, a copy of the error in that window (*won't always show up*)
@@ -81,8 +79,17 @@ Slicers only run the script when exporting the gcode, not when it's slicing the 
 
 **The chances are the bug you've found has already been squashed, so check the release notes of any new versions beforehand!**
 
-These issues include when a print fails or doesn't print as expected. If possible to help us diagnose the issue quicker, please provide the following information:
+These issues include when a print fails or doesn't print as expected. If possible to help me diagnose the issue quicker, please provide the following information:
 
 1. A copy of the gcode that has issues with it
 2. A copy of the STL you sliced (*including mentioning what slicer you used*)
-3. A photo of the print that failed (*if it didn't even start printing, then obviously we don't need a photo of your empty build plate*)
+3. A photo of the print that failed (*if it didn't even start printing, then obviously I don't need a photo of your empty build plate*)
+
+
+
+# Credits
+
+**Weaslus**: Proof Reader, Hypeman & Pestered Me Into Making This
+
+**Donut Man**: They Were Here Too
+
