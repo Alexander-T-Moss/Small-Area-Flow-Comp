@@ -40,8 +40,6 @@ The first thing you need is the script for your relavent platform (`win`, `osx_i
 
 ### PrusaSlicer/SuperSlicer
 
----
-
 1. Navigate to `Post-processing scripts` via `Print Settings >> Output options` 
 2. Paste the path to your script in the text field (*see screenshot below, file path will differ*)
 
@@ -51,16 +49,12 @@ The first thing you need is the script for your relavent platform (`win`, `osx_i
 
 ### BambuStudio/OrcaSlicer
 
----
-
 1. Navigate to `Post-processing scripts` via `Others >> Scroll down to the bottom` (*Advanced settings need to be on*) 
 2. Paste the path to your script in the text field (*see screenshot below, file path will differ*)
 
 ![image-20230901093729295](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Screenshots/image-20230901093729295.png)
 
 ### Don't See Your Slicer? 
-
----
 
 Ping me (*alexandertmoss*) on Discord and I'll see what can be done :)
 
