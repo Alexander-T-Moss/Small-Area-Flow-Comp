@@ -91,6 +91,7 @@ class Program
         {
             errorLogger.AddToLog("Script unable to find gcode file");
             errorLogger.AddToLog($"Tried searching for file at: {slicerGcodeFilePath}");
+            Console.WriteLine("Script Unable To Find GCode File, make sure the path is in your slicer, and don't just run the executable :)");
         }
 
         // Check script loads gcode as expected
@@ -129,7 +130,6 @@ class Program
                     }
                 }
 
-
                 // If it's set to adjusting the flow
                 if (adjustingFlow)
                 {
@@ -151,7 +151,9 @@ class Program
                                 try
                                 {
                                     if(gcodeLineSegments[i][1] != '-')
+                                    {
                                         oldFlowVal = Convert.ToDouble('0' + gcodeLineSegments[i].Substring(1));
+                                    }
                                 }
                                 catch (Exception FormatException)
                                 {
@@ -189,7 +191,7 @@ class Program
     // Create header for top of gcode file
     public string scriptGcodeHeader(FlowMaths flowMaths)
     {
-        string header = "; File Parsed By Flow Comp Script\n; Script Ver. V0.5.1\n; Flow Model Ver. V0.1.1\n; Logger Ver. V0.0.1";
+        string header = "; File Parsed By Flow Comp Script\n; Script Ver. V0.5.2\n; Flow Model Ver. V0.1.1\n; Logger Ver. V0.0.1";
         Console.WriteLine(header + flowMaths.ReturnFlowModelParameters());
         return header + flowMaths.ReturnFlowModelParameters();
     } 
