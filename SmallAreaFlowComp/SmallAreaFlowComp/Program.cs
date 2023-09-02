@@ -9,7 +9,7 @@ class Program
         ErrorLogger errorLogger = new ErrorLogger("log.txt");
 
         // Flags that are checked for in slicer gcode
-        string[] slicerInfillFlags = { ";TYPE:Solid infill", ";TYPE:Top solid infill", "; FEATURE: Top surface", "; FEATURE: Internal solid infill", "; FEATURE: Bottom surface"};
+        string[] slicerInfillFlags = { ";TYPE:Solid infill", ";TYPE:Top solid infill", "; FEATURE: Top surface", "; FEATURE: Internal solid infill", "; FEATURE: Bottom surface", ";TYPE:Internal solid infill",";TYPE:Top surface", ";TYPE:Bottom surface"};
         string[] slicerGenericFlags = { ";TYPE:" , "; FEATURE:"};
 
         // Forces script to interpert , and . as thousands and decimal respectively
