@@ -45,18 +45,14 @@ class Program
 
                 else if(args[i][0] == 'F')  
                 {
-                    double userMinFlowPercent = Convert.ToDouble(args[i].Substring(1))/100;
+                    int userMinFlowPercent = Convert.ToInt32(args[i].Substring(1));
 
                     // Check userMinFlowPercent is a percentage (between 0 and 100 inclusive)
                     if (userMinFlowPercent < 0 || userMinFlowPercent > 100)
                         errorLogger.AddToLog($"{args[i]} Is Out Of Range For minFlowPercent, Please Use A Value Between 0 and 100, Inclusive, Using Default Value For MinFlowPercent");
-                    
-                    // Check userMinFlowPercent is a whole number
-                    else if (userMinFlowPercent % 1 != 0)
-                        errorLogger.AddToLog($"{args[i]} Is Not A Whole Number, Please Only Use Whole Number Percentages, Using Default Value");
-                    
+
                     else
-                        flowMaths.minFlowPercent = Math.Round(userMinFlowPercent/100);
+                        flowMaths.minFlowPercent = MathF.Round((float)userMinFlowPercent / 100f, 2);
                 }
                 
                 else if(args[i][0] == 'D')
@@ -159,14 +155,14 @@ class Program
                                 }
                                 catch (Exception FormatException)
                                 {
-                                errorLogger.AddToLog($"Soft Error: {FormatException.Message}");
+                                    errorLogger.AddToLog($"Soft Error: {FormatException.Message}");
                                 }
 
                                 // Check if E value isn't a deretraction or wipe
                                 if (oldFlowVal > 0f)
                                 {
                                     newFlowVal = flowMaths.ModifyFlow(flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos), oldFlowVal);
-                                    gcodeLineSegments[i] = "E" + newFlowVal.ToString("N2");
+                                    gcodeLineSegments[i] = "E" + newFlowVal.ToString("N5");
                                 }
                             }
                         }
@@ -185,15 +181,15 @@ class Program
             gcodeLines.Insert(0, program.scriptGcodeHeader(flowMaths));
             File.WriteAllLines(slicerGcodeFilePath, gcodeLines);
             errorLogger.AddToLog("File Parsed Successfully (I Hope)");
-            Console.WriteLine("Press Any Key To Close This Terminal");
-            Console.ReadLine();
+            Console.WriteLine("Terminal Should Close In 5 Seconds");
+            Thread.Sleep(5000); 
         }
     }
 
     // Create header for top of gcode file
     public string scriptGcodeHeader(FlowMaths flowMaths)
     {
-        string header = "; File Parsed By Flow Comp Script\n; Script Ver. V0.5.0\n; Flow Model Ver. V0.1.1\n; Logger Ver. V0.0.1";
+        string header = "; File Parsed By Flow Comp Script\n; Script Ver. V0.5.1\n; Flow Model Ver. V0.1.1\n; Logger Ver. V0.0.1";
         Console.WriteLine(header + flowMaths.ReturnFlowModelParameters());
         return header + flowMaths.ReturnFlowModelParameters();
     } 
@@ -259,7 +255,7 @@ class FlowMaths
     // Retursn the parameters used by the flow model
     public string ReturnFlowModelParameters()
     {
-        string msg = $"; MaxModifiedLength: {maxModifiedLength}\n; MinFlowPercent: " + minFlowPercent.ToString("N2") + $"\n; FlowDropOff: {flowDropOff}\n";
+        string msg = $"\n; MaxModifiedLength: {maxModifiedLength}\n; MinFlowPercent: " + minFlowPercent.ToString("N2") + $"\n; FlowDropOff: {flowDropOff}\n";
         return msg;
     }
 

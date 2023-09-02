@@ -48,6 +48,14 @@ There is nothing special about these files for the most part, they just have som
 
 
 
+![flow_comp_test_print_demo](/Screenshots/flow_comp_test_print_demo.png)
+
+### surface_flow_comp_test_print.stl
+
+This is the main test STL (for the time being, and is the one shown above). For best results I'd print this with 2 perimeters
+
+
+
 ### Modified_Voron_Filament_Card.stl
 
 This file is a slight edit of the [voron filament card](https://github.com/VoronDesign/Voron-2/blob/Voron2.4/STLs/Test_Prints/Filament_Card.stl), it is made slightly thicker to mitigate any first layer over squish/extrusion travelling through the print affecting top surfaces
