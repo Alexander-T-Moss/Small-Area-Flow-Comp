@@ -1,5 +1,4 @@
 [![build and test](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/build.yml/badge.svg)](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/build.yml)
-
 [![release](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/release.yml/badge.svg)](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/release.yml)
 
 Hey fellow 3DP Enthusiast who has fallen down the rabbit hole of tuning their 3D printer, I appreciate you spending time here helping me test some pretty cool stuff (if I do say so myself). I have spent way too long working on this, and all I ask in return is for 5 mins of your time to read through this documentation! Past me thanks you (and assumes you will read this page, let's not disappoint him) 
