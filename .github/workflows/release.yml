@@ -3,8 +3,10 @@ on:
   push:
     tags:
         - '*.*.*'
+
 env:
   DOTNET_VERSION: '7.0.x'
+
 jobs:
   publish:
     name: release-${{matrix.os}}
