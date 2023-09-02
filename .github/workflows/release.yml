@@ -6,7 +6,7 @@ on:
 env:
   DOTNET_VERSION: '7.0.x'
 jobs:
-  build-and-test:
+  publish:
     name: release-${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -45,3 +45,9 @@ jobs:
       with:
         name: artifacts
         path: artifacts/**/*
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./artifacts/**/*
