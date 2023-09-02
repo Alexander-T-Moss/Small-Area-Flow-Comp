@@ -28,8 +28,17 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal ./SmallAreaFlowComp/SmallAreaFlowComp.sln
 
-    - name: Publish
-      run: dotnet publish --configuration Release --no-build --verbosity normal --self-contained --output ./artifacts ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+    - name: Publish linux
+      run: dotnet publish --configuration Release --no-build --verbosity normal --self-contained --output ./artifacts/linux-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+      if: matrix.os == 'ubuntu-latest'
+
+    - name: Publish windows
+      run: dotnet publish --configuration Release --no-build --verbosity normal --self-contained --output ./artifacts/win-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+      if: matrix.os == 'windows-latest'
+
+    - name: Publish macOS
+      run: dotnet publish --configuration Release --no-build --verbosity normal --self-contained --output ./artifacts/macos-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+      if: matrix.os == 'macOS-latest'
 
     - name: Artifacts
       uses: actions/upload-artifact@v2
