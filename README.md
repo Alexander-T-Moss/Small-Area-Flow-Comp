@@ -1,6 +1,6 @@
-[![build and test](https://github.com/chrisrichards/Small-Area-Flow-Comp/actions/workflows/build.yml/badge.svg)](https://github.com/chrisrichards/Small-Area-Flow-Comp/actions/workflows/build.yml)
+[![build and test](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/build.yml/badge.svg)](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/build.yml)
 
-[![release](https://github.com/chrisrichards/Small-Area-Flow-Comp/actions/workflows/release.yml/badge.svg)](https://github.com/chrisrichards/Small-Area-Flow-Comp/actions/workflows/release.yml)
+[![release](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/release.yml/badge.svg)](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/release.yml)
 
 Hey fellow 3DP Enthusiast who has fallen down the rabbit hole of tuning their 3D printer, I appreciate you spending time here helping me test some pretty cool stuff (if I do say so myself). I have spent way too long working on this, and all I ask in return is for 5 mins of your time to read through this documentation! Past me thanks you (and assumes you will read this page, let's not disappoint him) 
 
@@ -27,7 +27,7 @@ I've created a script to modify the flow of extrusion lines inversely proportion
 
 From preliminary testing, I have noticed some improvements in my small area solid infill, but this is a sample size of 1, me, so like all good scientific hypothesis testing, I need more samples to confirm whether or not this script actually works as expected!
 
-For more testing specific info, there is another readme [here](/TestingAssets), this one was starting to get a bit too long...
+For more testing-specific info, there is another readme [here](/TestingAssets), this one was starting to get a bit too long...
 
 
 
@@ -72,7 +72,7 @@ Ping me (*alexandertmoss*) on Discord and I'll see what can be done :)
 
 # HELP! It's Not Working 
 
-To help diagnose the issues quicker, please provide the information (*if possible*) below for your issue on the [channel in VORONDesign](link.to.channel). (*You'll get quicker responses there than if you submit an issue on GitHub*)
+To help diagnose the issues quicker, please provide the information (*if possible*) below for your issue on the [channel in VORONDesign](https://discord.com/channels/460117602945990666/1147276713156427887). (*You'll get quicker responses there than if you submit an issue on GitHub*)
 
 
 
