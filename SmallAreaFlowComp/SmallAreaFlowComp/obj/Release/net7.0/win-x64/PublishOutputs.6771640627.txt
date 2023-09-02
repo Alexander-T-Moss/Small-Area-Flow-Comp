@@ -1,2 +1,0 @@
-/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/publish/SmallAreaFlowComp.pdb
-/Users/alexanderthorunnarson-moss/Documents/GitHub/Small-Area-Flow-Comp/SmallAreaFlowComp/SmallAreaFlowComp/bin/Release/net7.0/win-x64/publish/SmallAreaFlowComp.exe
