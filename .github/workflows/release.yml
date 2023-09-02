@@ -31,22 +31,22 @@ jobs:
 
     - name: Publish linux-x64
       run: |
-        dotnet publish --configuration Release --no-build --verbosity normal -r linux-x64 --self-contained --output ./artifacts/linux-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+        dotnet publish --configuration Release --verbosity normal -r linux-x64 --self-contained --output ./artifacts/linux-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
         zip -r artifacts/linux-x64.zip artifacts/linux-x64
 
     - name: Publish win-x64
       run: |
-        dotnet publish --configuration Release --no-build --verbosity normal -r win-x64 --self-contained --output ./artifacts/win-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+        dotnet publish --configuration Release --verbosity normal -r win-x64 --self-contained --output ./artifacts/win-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
         zip -r artifacts/win-x64.zip artifacts/win-x64
 
     - name: Publish osx-x64
       run: |
-        dotnet publish --configuration Release --no-build --verbosity normal -r osx-x64 --self-contained --output ./artifacts/osx-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+        dotnet publish --configuration Release --verbosity normal -r osx-x64 --self-contained --output ./artifacts/osx-x64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
         zip -r artifacts/osx-x64.zip artifacts/osx-x64
 
     - name: Publish osx-arm64
       run: |
-        dotnet publish --configuration Release --no-build --verbosity normal -r osx-arm64 --self-contained --output ./artifacts/osx-arm64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+        dotnet publish --configuration Release --verbosity normal -r osx-arm64 --self-contained --output ./artifacts/osx-arm64 ./SmallAreaFlowComp/SmallAreaFlowComp.sln
         zip -r artifacts/osx-arm64.zip artifacts/osx-arm64
 
     - name: Artifacts
