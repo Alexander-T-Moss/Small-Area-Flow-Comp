@@ -1,0 +1,70 @@
+name: release
+on:
+  push:
+    tags:
+        - '*.*.*'
+
+env:
+  DOTNET_VERSION: '7.0.x'
+
+jobs:
+  publish:
+    name: release
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Install dependencies
+      run: dotnet restore ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+
+    - name: Publish linux-x64
+      run: |
+        dotnet publish --configuration Release --verbosity normal -r linux-x64 --self-contained --output ./artifacts/${{ env.OUTPUT_NAME }} ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+        zip -r artifacts/$OUTPUT_NAME.zip artifacts/${{ env.OUTPUT_NAME }}
+      env:
+        OUTPUT_NAME: SmallAreaFlowComp-${{ github.ref_name }}-linux-x64
+
+    - name: Publish win-x64
+      run: |
+        dotnet publish --configuration Release --verbosity normal -r win-x64 --self-contained --output ./artifacts/${{ env.OUTPUT_NAME }} ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+        zip -r artifacts/$OUTPUT_NAME.zip artifacts/${{ env.OUTPUT_NAME }}
+      env:
+          OUTPUT_NAME: SmallAreaFlowComp-${{ github.ref_name }}-win-x64
+
+    - name: Publish osx-x64
+      run: |
+        dotnet publish --configuration Release --verbosity normal -r osx-x64 --self-contained --output ./artifacts/${{ env.OUTPUT_NAME }} ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+        zip -r artifacts/$OUTPUT_NAME.zip artifacts/${{ env.OUTPUT_NAME }}
+      env:
+          OUTPUT_NAME: SmallAreaFlowComp-${{ github.ref_name }}-osx-x64
+
+    - name: Publish osx-arm64
+      run: |
+        dotnet publish --configuration Release --verbosity normal -r osx-arm64 --self-contained --output ./artifacts/${{ env.OUTPUT_NAME }} ./SmallAreaFlowComp/SmallAreaFlowComp.sln
+        zip -r artifacts/$OUTPUT_NAME.zip artifacts/${{ env.OUTPUT_NAME }}
+      env:
+          OUTPUT_NAME: SmallAreaFlowComp-${{ github.ref_name }}-osx-arm64
+
+    - name: Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: artifacts
+        path: artifacts/*.zip
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./artifacts/*.zip
