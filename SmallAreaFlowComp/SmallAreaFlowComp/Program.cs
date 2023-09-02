@@ -1,91 +1,245 @@
 ﻿using System.Numerics;
+using System.Globalization;
 
 class Program
-{
+{   
     static void Main(string[] args)
     {
-        // Get gcode file
-        string slicerGcodeFilePath = args[0];
-        string[] gcodeLines = File.ReadAllLines(slicerGcodeFilePath);
+        // Set up the log file
+        ErrorLogger errorLogger = new ErrorLogger("log.txt");
 
         // Flags that are checked for in slicer gcode
         string[] slicerInfillFlags = { ";TYPE:Solid infill", ";TYPE:Top solid infill", "; FEATURE: Top surface", "; FEATURE: Internal solid infill", "; FEATURE: Bottom surface"};
         string[] slicerGenericFlags = { ";TYPE:" , "; FEATURE:"};
 
-        bool adjustingFlow = false;
+        // Forces script to interpert , and . as thousands and decimal respectively
+        System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
-        Vector2 previousToolPos = new(0, 0);
+        // Initiate objects
         FlowMaths flowMaths = new();
+        Program program = new Program();
 
-        // Loop through every line of gcode
-        for (int index = 0; index < gcodeLines.Count(); index++)
+        // Load variable arguments passed to the script
+        for(int i = 0; i < args.Length - 1; i++)
         {
-            // Update current tool position
-            Vector2 currentToolPos = flowMaths.UpdateToolPos(gcodeLines[index], previousToolPos);
-
-            // Check if it's reading infill gcdoe that needs modified
-            if (slicerInfillFlags.Contains(gcodeLines[index]))
-                adjustingFlow = true;
-
-            else if (adjustingFlow)
+            try
             {
-                foreach (string genericFlag in slicerGenericFlags)
+                if(args[i][0] == 'L')  
                 {
-                    if (gcodeLines[index].Contains(genericFlag))
-                        adjustingFlow = false;
+                    int userMaxModifiedLength = Convert.ToInt32(args[i].Substring(1));
+
+                    // Check userMaxModifiedLength isn't negative
+                    if(userMaxModifiedLength < 0)
+                        errorLogger.AddToLog($"{args[i]} Is Below 0, Using Default Value");
+
+                    // Warn if userMaxModifiedLength seems quite long
+                    else if(userMaxModifiedLength > 20)
+                    {
+                        flowMaths.maxModifiedLength = Convert.ToInt32(args[i].Substring(1));
+                        errorLogger.AddToLog($"{args[i]} Seems Very High, Are You Sure This Is Correct?");
+                    }
+
+                    else
+                        flowMaths.maxModifiedLength = Convert.ToInt32(args[i].Substring(1));    
+                }
+
+                else if(args[i][0] == 'F')  
+                {
+                    double userMinFlowPercent = Convert.ToDouble(args[i].Substring(1))/100;
+
+                    // Check userMinFlowPercent is a percentage (between 0 and 100 inclusive)
+                    if (userMinFlowPercent < 0 || userMinFlowPercent > 100)
+                        errorLogger.AddToLog($"{args[i]} Is Out Of Range For minFlowPercent, Please Use A Value Between 0 and 100, Inclusive, Using Default Value For MinFlowPercent");
+                    
+                    // Check userMinFlowPercent is a whole number
+                    else if (userMinFlowPercent % 1 != 0)
+                        errorLogger.AddToLog($"{args[i]} Is Not A Whole Number, Please Only Use Whole Number Percentages, Using Default Value");
+                    
+                    else
+                        flowMaths.minFlowPercent = Math.Round(userMinFlowPercent/100);
+                }
+                
+                else if(args[i][0] == 'D')
+                {
+                    Int32 userFlowDropOff = Convert.ToInt32(args[i].Substring(1));
+
+                    // Check userFlowDropOff is a multiple of 2
+                    if(userFlowDropOff % 2 != 0)   
+                        errorLogger.AddToLog($"{args[i]} Needs To Be A Multiple Of 2, Using Default Value");
+
+                    // Check userFlowDropOff is a positive multiple of 2
+                    else if(userFlowDropOff < 2)   
+                        errorLogger.AddToLog($"{args[i]} Needs To Be A Positive Multiple Of 2, Using Default Value");
+                    
+                    else
+                        flowMaths.flowDropOff = userFlowDropOff;
                 }
             }
-
-
-            // If it's set to adjusting the flow
-            if (adjustingFlow)
+            catch(FormatException)
             {
-                double oldFlowVal = -1f;
-                double newFlowVal = -1f;
+                errorLogger.AddToLog($"{args[i]} Parameter Not In Correct format, Using Default Value!");
+            }
+        }
 
-                string[] gcodeLineSegments = gcodeLines[index].Trim().Split(' ');
 
-                // Loop through each segment of gcode
-                for (int i = 0; i < gcodeLineSegments.Count(); i++)
+        // Get gcode file path from arguments
+        string slicerGcodeFilePath = args[^1];
+        List<string> gcodeLines = new();
+
+        // Load gcode file
+        try
+        {
+           gcodeLines = File.ReadAllLines(slicerGcodeFilePath).ToList();
+        }
+        catch (FileNotFoundException)
+        {
+            errorLogger.AddToLog("Script unable to find gcode file");
+            errorLogger.AddToLog($"Tried searching for file at: {slicerGcodeFilePath}");
+        }
+
+        // Check script loads gcode as expected
+        bool alreadyParsed = false;
+
+        if (gcodeLines.Count() < 1)
+            errorLogger.AddToLog("Loaded Gcode file appears to be empty"); 
+
+        else if(gcodeLines[0].Contains("; File Parsed By Flow Comp Script"))
+        {
+            errorLogger.AddToLog("Script Already Parsed By Flow Comp Script");
+            alreadyParsed = true;
+        }
+
+        bool adjustingFlow = false;
+        Vector2 previousToolPos = new(0, 0);
+        
+        if(!alreadyParsed)
+        {
+            // Loop through every line of gcode
+            for (int index = 0; index < gcodeLines.Count(); index++)
+            {
+                // Update current tool position
+                Vector2 currentToolPos = flowMaths.UpdateToolPos(gcodeLines[index], previousToolPos);
+
+                // Check if it's reading infill gcode that needs modified
+                if (slicerInfillFlags.Contains(gcodeLines[index]))
+                    adjustingFlow = true;
+
+                else if (adjustingFlow)
                 {
-                    // Check for padding spaces
-                    if(gcodeLineSegments[i].Length > 0)
+                    foreach (string genericFlag in slicerGenericFlags)
                     {
-                        // Check if the segment begins with E (extrusion gcode)
-                        if (gcodeLineSegments[i][0] == 'E')
-                        {
-                            // Converts whatever is after the E (and if it fails, catches the error)
-                            try
-                            {
-                                oldFlowVal = Convert.ToDouble(gcodeLineSegments[i].Substring(1));
-                            }
-                            catch (Exception FormatException)
-                            {
-                                Console.WriteLine(FormatException.Message);
-                            }
-
-                            // Check if E value isn't a deretraction or wipe
-                            if (oldFlowVal > 0f)
-                            {
-                                newFlowVal = flowMaths.ModifyFlow(flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos), oldFlowVal);
-                                gcodeLineSegments[i] = "E" + newFlowVal.ToString("N5");
-                            }
-                        }
+                        if (gcodeLines[index].Contains(genericFlag))
+                            adjustingFlow = false;
                     }
                 }
 
-                // Modify E value if it's been changed (doesn't modify retraction stuff)
-                if (oldFlowVal > 0 && oldFlowVal != newFlowVal)
-                    gcodeLines[index] = String.Join(' ', gcodeLineSegments) + "; Old Flow Value: " + oldFlowVal + " tool at: X" + currentToolPos.X + " Y" + currentToolPos.Y + " was at: X" + previousToolPos.X + " Y" + previousToolPos.Y;
+
+                // If it's set to adjusting the flow
+                if (adjustingFlow)
+                {
+                    double oldFlowVal = -1f;
+                    double newFlowVal = -1f;
+
+                    string[] gcodeLineSegments = gcodeLines[index].Trim().Split(' ');
+
+                    // Loop through each segment of gcode
+                    for (int i = 0; i < gcodeLineSegments.Count(); i++)
+                    {
+                        // Check for padding spaces
+                        if(gcodeLineSegments[i].Length > 0)
+                        {
+                            // Check if the segment begins with E (extrusion gcode)
+                            if (gcodeLineSegments[i][0] == 'E')
+                            {
+                                // Converts whatever is after the E (and if it fails, catches the error)
+                                try
+                                {
+                                    if(gcodeLineSegments[i][1] != '-')
+                                        oldFlowVal = Convert.ToDouble('0' + gcodeLineSegments[i].Substring(1));
+                                }
+                                catch (Exception FormatException)
+                                {
+                                errorLogger.AddToLog($"Soft Error: {FormatException.Message}");
+                                }
+
+                                // Check if E value isn't a deretraction or wipe
+                                if (oldFlowVal > 0f)
+                                {
+                                    newFlowVal = flowMaths.ModifyFlow(flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos), oldFlowVal);
+                                    gcodeLineSegments[i] = "E" + newFlowVal.ToString("N2");
+                                }
+                            }
+                        }
+                    }
+
+                    // Modify E value if it's been changed (doesn't modify retraction stuff)
+                    if (oldFlowVal > 0 && oldFlowVal != newFlowVal)
+                        gcodeLines[index] = String.Join(' ', gcodeLineSegments) + "; Old Flow Value: " + oldFlowVal + " tool at: X" + currentToolPos.X + " Y" + currentToolPos.Y + " was at: X" + previousToolPos.X + " Y" + previousToolPos.Y;
+                }
+
+                // Update previous tool position
+                previousToolPos = currentToolPos;
             }
 
-            // Update previous tool position
-            previousToolPos = currentToolPos;
+            // Rewrite all the gcode back to the slicer
+            gcodeLines.Insert(0, program.scriptGcodeHeader(flowMaths));
+            File.WriteAllLines(slicerGcodeFilePath, gcodeLines);
+            errorLogger.AddToLog("File Parsed Successfully (I Hope)");
+            Console.WriteLine("Press Any Key To Close This Terminal");
+            Console.ReadLine();
         }
+    }
 
-        // Rewrite all the gcode back to the slicer
-        File.WriteAllLines(slicerGcodeFilePath, gcodeLines);
-        Console.WriteLine("File Parsed");
+    // Create header for top of gcode file
+    public string scriptGcodeHeader(FlowMaths flowMaths)
+    {
+        string header = "; File Parsed By Flow Comp Script\n; Script Ver. V0.5.0\n; Flow Model Ver. V0.1.1\n; Logger Ver. V0.0.1";
+        Console.WriteLine(header + flowMaths.ReturnFlowModelParameters());
+        return header + flowMaths.ReturnFlowModelParameters();
+    } 
+}
+
+class ErrorLogger
+{
+    // ErrorLogger variables
+    private string scriptDirectory, logFilePath;
+
+    // Constructor
+    public ErrorLogger(string logFileName)
+    {
+        scriptDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        logFilePath = Path.Combine(scriptDirectory, logFileName);
+
+        // Try to create or open the log file for writing
+        try
+        {
+            using (StreamWriter writer = File.AppendText(logFilePath))
+            {
+                // Write a message to the log file
+                writer.WriteLine($"Log file accessed at: {DateTime.Now}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating or writing to the log file: {ex.Message}");
+        }
+    }
+
+    public void AddToLog(string msg)
+    {
+        try
+        {
+            // Create or open the log file for appending
+            using (StreamWriter writer = File.AppendText(logFilePath))
+            {
+                // Write the log entry to the log file
+                writer.WriteLine($"{DateTime.Now}: {msg}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error appending to the log file: {ex.Message}");
+        }
     }
 }
 
@@ -93,17 +247,23 @@ class Program
 // Class to handle all the flow maths etc.
 class FlowMaths
 {
-    // Length at which extrusion modifer is no longer applied
-    const int maxModifiedLength = 17;
+    // Length at which extrusion modifer is no longer applied (argument e.g. L17)
+    public int maxModifiedLength = 17;
     
-    // Min percentage flow is reduced to
-    const double minFlowPercent = 0.3f;
+    // Min percentage flow is reduced to (argument e.g. F30)
+    public double minFlowPercent = 0.3f; 
 
-    // How exponential the flow drop off is (multiple of 2)
-    const int flowDropOff = 12;
+    // How exponential the flow drop off is (multiple of 2) (argument e.g. D12)
+    public int flowDropOff = 12;
 
+    // Retursn the parameters used by the flow model
+    public string ReturnFlowModelParameters()
+    {
+        string msg = $"; MaxModifiedLength: {maxModifiedLength}\n; MinFlowPercent: " + minFlowPercent.ToString("N2") + $"\n; FlowDropOff: {flowDropOff}\n";
+        return msg;
+    }
 
-
+    // The maths doing the flow compensation
     private double flowCompModel(double extrusionLength)
     {
         if(extrusionLength == 0 || extrusionLength > maxModifiedLength)
