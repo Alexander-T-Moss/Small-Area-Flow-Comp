@@ -23,10 +23,10 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Install dependencies
-      run: dotnet restore
+      run: dotnet restore ./SmallAreaFlowComp/SmallAreaFlowComp.sln
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore ./SmallAreaFlowComp/SmallAreaFlowComp.sln
 
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-restore --verbosity normal ./SmallAreaFlowComp/SmallAreaFlowComp.sln
