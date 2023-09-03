@@ -1,22 +1,56 @@
-﻿using System.Numerics;
+﻿// Error Codes:                            //
+// 1 - Fed GCode Already Parsed            //
+// 2 - Unable to make/edit temp gcode file //
+//                                         //
+// 999 - Check Log, Unknown Error          //
+
+using System.Numerics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 class Program
 {   
+    // Version Variables
+    string FlowCompScriptVer = "V0.6.0";
+    string FlowModelVer = "V0.1.1";
+    string ErrorLoggerVer = "V0.0.1";
+
+    // Create header for top of gcode file
+    public string ScriptGcodeHeader(FlowMaths flowMaths)
+    {
+        string header = $"; File Parsed By Flow Comp Script\n; Script Ver. {FlowCompScriptVer}\n; Flow Model Ver. {FlowModelVer}\n; Logger Ver. {ErrorLoggerVer}";
+        Console.WriteLine(header + flowMaths.ReturnFlowModelParameters());
+        return header + flowMaths.ReturnFlowModelParameters();
+    } 
+
+    // Main bit of code
     static void Main(string[] args)
     {
+        // Forces script to interpert , and . as thousands seperator and decimal respectively
+        System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
         // Set up the log file
         ErrorLogger errorLogger = new ErrorLogger("log.txt");
 
-        // Flags that are checked for in slicer gcode
-        string[] slicerInfillFlags = { ";TYPE:Solid infill", ";TYPE:Top solid infill", "; FEATURE: Top surface", "; FEATURE: Internal solid infill", "; FEATURE: Bottom surface", ";TYPE:Internal solid infill",";TYPE:Top surface", ";TYPE:Bottom surface"};
+        // Flags that are checked for in slicer gcode (for ares to modify)
+        string[] slicerInfillFlags = { ";TYPE:Solid infill",
+                                       ";TYPE:Top solid infill",
+                                       ";TYPE:Internal solid infill",
+                                       ";TYPE:Top surface", 
+                                       ";TYPE:Bottom surface",
+                                       "; FEATURE: Top surface",
+                                       "; FEATURE: Internal solid infill",
+                                       "; FEATURE: Bottom surface"};
+
+        // Flags that are checked for change in extrusion type
         string[] slicerGenericFlags = { ";TYPE:" , "; FEATURE:"};
 
-        // Forces script to interpert , and . as thousands and decimal respectively
-        System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+        // Regex pattern to check if gcode lines and segments
+        Regex gcodeLineOfInterest = new Regex(@"[XYE][\d]+(?:\.\d+)?"); // Contains either XYZ followed by number
+        Regex extrusionMovePattern = new Regex(@"^E(?:0\.\d+|\.\d+|[1-9]\d*|\d+\.\d+)$");
 
-        // Initiate objects
-        FlowMaths flowMaths = new();
+        // Initiate FlowMaths and copy of Program
+        FlowMaths flowMaths = new(errorLogger);
         Program program = new Program();
 
         // Load variable arguments passed to the script
@@ -77,130 +111,104 @@ class Program
             }
         }
 
-
-        // Get gcode file path from arguments
+        // Get gcode file path from arguments and create temp gcode file
         string slicerGcodeFilePath = args[^1];
-        List<string> gcodeLines = new();
+        string tempGCodeFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempScriptGCode.gcode");
 
-        // Load gcode file
-        try
-        {
-           gcodeLines = File.ReadAllLines(slicerGcodeFilePath).ToList();
-        }
-        catch (FileNotFoundException)
-        {
-            errorLogger.AddToLog("Script unable to find gcode file");
-            errorLogger.AddToLog($"Tried searching for file at: {slicerGcodeFilePath}");
-            Console.WriteLine("Script Unable To Find GCode File, make sure the path is in your slicer, and don't just run the executable :)");
-        }
-
-        // Check script loads gcode as expected
-        bool alreadyParsed = false;
-
-        if (gcodeLines.Count() < 1)
-            errorLogger.AddToLog("Loaded Gcode file appears to be empty"); 
-
-        else if(gcodeLines[0].Contains("; File Parsed By Flow Comp Script"))
-        {
-            errorLogger.AddToLog("Script Already Parsed By Flow Comp Script");
-            alreadyParsed = true;
-        }
-
-        bool adjustingFlow = false;
+        // Assume initial tool position is at 0,0 (sould be updated before any extrusion moves anyway)
         Vector2 previousToolPos = new(0, 0);
+        bool adjustingFlow = false;
         
-        if(!alreadyParsed)
-        {
-            // Loop through every line of gcode
-            for (int index = 0; index < gcodeLines.Count(); index++)
+        // Start Reading GCode File
+        try{
+            using (StreamReader reader = new(slicerGcodeFilePath))
+            using (StreamWriter writer = new(tempGCodeFilePath))
             {
-                // Update current tool position
-                Vector2 currentToolPos = flowMaths.UpdateToolPos(gcodeLines[index], previousToolPos);
+                // Add header to temp gcode file
+                writer.WriteLine(program.ScriptGcodeHeader(flowMaths));
 
-                // Check if it's reading infill gcode that needs modified
-                if (slicerInfillFlags.Contains(gcodeLines[index]))
-                    adjustingFlow = true;
-
-                else if (adjustingFlow)
+                string? GCodeLine;
+                while ((GCodeLine = reader.ReadLine()) != null)
                 {
-                    foreach (string genericFlag in slicerGenericFlags)
+                    // Check if gcode file has alread been parsed
+                    if(GCodeLine.Trim() == "; File Parsed By Flow Comp Script")
+                        Environment.Exit(1);
+
+                    // Check if reading gcode that needs flow comp (see flags above)
+                    if (slicerInfillFlags.Contains(GCodeLine))
+                        adjustingFlow = true;
+
+                    else if (adjustingFlow)
                     {
-                        if (gcodeLines[index].Contains(genericFlag))
-                            adjustingFlow = false;
-                    }
-                }
-
-                // If it's set to adjusting the flow
-                if (adjustingFlow)
-                {
-                    double oldFlowVal = -1f;
-                    double newFlowVal = -1f;
-
-                    string[] gcodeLineSegments = gcodeLines[index].Trim().Split(' ');
-
-                    // Loop through each segment of gcode
-                    for (int i = 0; i < gcodeLineSegments.Count(); i++)
-                    {
-                        // Check for padding spaces
-                        if(gcodeLineSegments[i].Length > 0)
+                        foreach (string genericFlag in slicerGenericFlags)
                         {
-                            // Check if the segment begins with E (extrusion gcode)
-                            if (gcodeLineSegments[i][0] == 'E')
-                            {
-                                // Converts whatever is after the E (and if it fails, catches the error)
-                                try
-                                {
-                                    if(gcodeLineSegments[i][1] != '-')
-                                    {
-                                        oldFlowVal = Convert.ToDouble('0' + gcodeLineSegments[i].Substring(1));
-                                    }
-                                }
-                                catch (Exception FormatException)
-                                {
-                                    errorLogger.AddToLog($"Soft Error: {FormatException.Message}");
-                                }
+                            if (GCodeLine.Contains(genericFlag))
+                                adjustingFlow = false;
+                        }
+                    }
 
-                                // Check if E value isn't a deretraction or wipe
-                                if (oldFlowVal > 0f)
+                    // Update current tool position
+                    Vector2 currentToolPos = flowMaths.UpdateToolPos(GCodeLine, previousToolPos);
+
+                    if (adjustingFlow && gcodeLineOfInterest.IsMatch(GCodeLine))
+                    {
+                        double oldFlowVal = -1f;
+                        double newFlowVal = -1f;
+
+                        // Break GCodeLine Into It's Segments
+                        string[] gcodeLineSegments = GCodeLine.Trim().Split(' ');
+
+                        // Loop through each segment of gcode
+                        for (int i = 0; i < gcodeLineSegments.Count(); i++)
+                        {
+                            // Check if the segment is an extrusion move we want to modify
+                            if (extrusionMovePattern.IsMatch(gcodeLineSegments[i]))
+                            {
+                                // Try convert e value and update newFlowVal and oldFlowVal
+                                if(double.TryParse(gcodeLineSegments[i].Substring(1), out oldFlowVal))
                                 {
                                     newFlowVal = flowMaths.ModifyFlow(flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos), oldFlowVal);
                                     gcodeLineSegments[i] = "E" + newFlowVal.ToString("N5");
                                 }
+                                else
+                                    errorLogger.AddToLog($"Unable to convert {gcodeLineSegments[i].Substring(1)} to double");
                             }
                         }
+
+                        // Modify E value if it's been changed (doesn't modify retraction stuff)
+                        if (oldFlowVal > 0 && oldFlowVal != newFlowVal)
+                        {
+                            //GCodeLine = $"\n; Old Flow Value: {oldFlowVal}\n; Tool at: X{currentToolPos.X} Y{currentToolPos.Y}\n; Was at: X{previousToolPos.X} Y{previousToolPos.Y}\n\n" + String.Join(' ', gcodeLineSegments) +"\n";
+                            GCodeLine = String.Join(' ', gcodeLineSegments) + $"; Old Flow Value: {oldFlowVal}";
+                        }
                     }
+                    previousToolPos = currentToolPos;
 
-                    // Modify E value if it's been changed (doesn't modify retraction stuff)
-                    if (oldFlowVal > 0 && oldFlowVal != newFlowVal)
-                        gcodeLines[index] = String.Join(' ', gcodeLineSegments) + "; Old Flow Value: " + oldFlowVal + " tool at: X" + currentToolPos.X + " Y" + currentToolPos.Y + " was at: X" + previousToolPos.X + " Y" + previousToolPos.Y;
+                    // Write GCode Line (modifed or not) to temp gcode file                    
+                    writer.WriteLine(GCodeLine);
                 }
-
-                // Update previous tool position
-                previousToolPos = currentToolPos;
             }
+            File.Copy(tempGCodeFilePath, slicerGcodeFilePath, true);
+        }
 
-            // Rewrite all the gcode back to the slicer
-            gcodeLines.Insert(0, program.scriptGcodeHeader(flowMaths));
-            File.WriteAllLines(slicerGcodeFilePath, gcodeLines);
-            errorLogger.AddToLog("File Parsed Successfully (I Hope)");
-            Console.WriteLine("Terminal Should Close In 5 Seconds");
-            Thread.Sleep(5000); 
+        catch (Exception ex)
+        {
+            errorLogger.AddToLog($"An error occurred: {ex.Message}");
+            Environment.Exit(999);
+        }
+
+        finally
+        {
+            errorLogger.AddToLog("Deleting Temp Gcode File");
+            File.Delete(tempGCodeFilePath);
         }
     }
-
-    // Create header for top of gcode file
-    public string scriptGcodeHeader(FlowMaths flowMaths)
-    {
-        string header = "; File Parsed By Flow Comp Script\n; Script Ver. V0.5.2\n; Flow Model Ver. V0.1.1\n; Logger Ver. V0.0.1";
-        Console.WriteLine(header + flowMaths.ReturnFlowModelParameters());
-        return header + flowMaths.ReturnFlowModelParameters();
-    } 
 }
 
 class ErrorLogger
 {
     // ErrorLogger variables
-    private string scriptDirectory, logFilePath;
+    private readonly string scriptDirectory, logFilePath;
 
     // Constructor
     public ErrorLogger(string logFileName)
@@ -227,12 +235,8 @@ class ErrorLogger
     {
         try
         {
-            // Create or open the log file for appending
-            using (StreamWriter writer = File.AppendText(logFilePath))
-            {
-                // Write the log entry to the log file
-                writer.WriteLine($"{DateTime.Now}: {msg}");
-            }
+            // Add text to the log file at logFilePath
+            File.AppendAllText(logFilePath, $"{DateTime.Now}: {msg}");
         }
         catch (Exception ex)
         {
@@ -245,6 +249,12 @@ class ErrorLogger
 // Class to handle all the flow maths etc.
 class FlowMaths
 {
+    private ErrorLogger errorLogger;
+    public FlowMaths(ErrorLogger _errorLogger)
+    {
+        errorLogger = _errorLogger;
+    }
+
     // Length at which extrusion modifer is no longer applied (argument e.g. L17)
     public int maxModifiedLength = 17;
     
@@ -297,16 +307,29 @@ class FlowMaths
             {
                 string[] gcodeSegments = gcodeLine.Trim().Split(' ');
 
+                // Go through each segment of the gcode line
                 foreach (string segment in gcodeSegments)
                 {
-                    // Check segment isn't blank
-                    if(segment.Length != 0)
-                    {
-                        if (segment[0] == 'X' || segment[0] == 'x')
-                            xPos = (float)Convert.ToDouble(segment.Substring(1));
+                    try{
+                        // Check segment isn't blank
+                        if(segment.Length != 0)
+                        {
+                            // Try update X coordinate
+                            if (segment[0] == 'X' || segment[0] == 'x')
+                                xPos = (float)Convert.ToDouble(segment.Substring(1));
 
-                        else if (segment[0] == 'Y' || segment[0] == 'y')
-                            yPos = (float)Convert.ToDouble(segment.Substring(1));
+                            // Try update Y coordinate
+                            else if (segment[0] == 'Y' || segment[0] == 'y')
+                                yPos = (float)Convert.ToDouble(segment.Substring(1));
+                            
+                            // If it finds a comment, stops reading the segments
+                            else if(segment[0] == ';')
+                                break;
+                        }
+                    }
+
+                    catch(Exception ex){
+                        errorLogger.AddToLog($"Tried converting {segment.Substring(1)} to double but got error: {ex.Message}");
                     }
                 }
             }
