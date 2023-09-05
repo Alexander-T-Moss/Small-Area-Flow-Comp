@@ -1,18 +1,24 @@
-﻿// Error Codes:                            //
-// 1 - Fed GCode Already Parsed            //
-// 2 - Unable to make/edit temp gcode file //
-//                                         //
-// 999 - Check Log, Unknown Error          //
+﻿// Error Codes:                                 //
+// 1 - Fed GCode Already Parsed                 //
+// 2 - Unable to make/edit temp gcode file      //
+// 3 - Wrong format E Lengths in model.txt      //
+// 4 - Wrong format Flow Comp in model.txt      //
+// 5 - Issue loading model.txt file             //
+// 6 - Issue with line parts count in model.txt //
+// 7 - First/Last flow model values incorrect   //
+// 8 - Not enough flow model points (min. 3)    //
+//                                              //
+// 999 - Check Log, Unknown Error               //
 
 using System.Numerics;
-using System.Globalization;
 using System.Text.RegularExpressions;
+using MathNet.Numerics.Interpolation;
 
 class Program
 {   
     // Version Variables
-    string FlowCompScriptVer = "V0.6.0";
-    string FlowModelVer = "V0.1.1";
+    string FlowCompScriptVer = "V0.7.0";
+    string FlowModelVer = "V0.2.0";
     string ErrorLoggerVer = "V0.0.1";
 
     // Create header for top of gcode file
@@ -27,7 +33,10 @@ class Program
     static void Main(string[] args)
     {
         // Forces script to interpert , and . as thousands seperator and decimal respectively
-        System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+        Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+
+        // Make sure the script is aware of its current directory
+        Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 
         // Set up the log file
         ErrorLogger errorLogger = new ErrorLogger("log.txt");
@@ -47,69 +56,11 @@ class Program
 
         // Regex pattern to check if gcode lines and segments
         Regex gcodeLineOfInterest = new Regex(@"[XYE][\d]+(?:\.\d+)?"); // Contains either XYZ followed by number
-        Regex extrusionMovePattern = new Regex(@"^E(?:0\.\d+|\.\d+|[1-9]\d*|\d+\.\d+)$");
+        Regex extrusionMovePattern = new Regex(@"^E(?:0\.\d+|\.\d+|[1-9]\d*|\d+\.\d+)$"); // E Followed by a non negative decimal
 
         // Initiate FlowMaths and copy of Program
         FlowMaths flowMaths = new(errorLogger);
         Program program = new Program();
-
-        // Load variable arguments passed to the script
-        for(int i = 0; i < args.Length - 1; i++)
-        {
-            try
-            {
-                if(args[i][0] == 'L')  
-                {
-                    int userMaxModifiedLength = Convert.ToInt32(args[i].Substring(1));
-
-                    // Check userMaxModifiedLength isn't negative
-                    if(userMaxModifiedLength < 0)
-                        errorLogger.AddToLog($"{args[i]} Is Below 0, Using Default Value");
-
-                    // Warn if userMaxModifiedLength seems quite long
-                    else if(userMaxModifiedLength > 20)
-                    {
-                        flowMaths.maxModifiedLength = Convert.ToInt32(args[i].Substring(1));
-                        errorLogger.AddToLog($"{args[i]} Seems Very High, Are You Sure This Is Correct?");
-                    }
-
-                    else
-                        flowMaths.maxModifiedLength = Convert.ToInt32(args[i].Substring(1));    
-                }
-
-                else if(args[i][0] == 'F')  
-                {
-                    int userMinFlowPercent = Convert.ToInt32(args[i].Substring(1));
-
-                    // Check userMinFlowPercent is a percentage (between 0 and 100 inclusive)
-                    if (userMinFlowPercent < 0 || userMinFlowPercent > 100)
-                        errorLogger.AddToLog($"{args[i]} Is Out Of Range For minFlowPercent, Please Use A Value Between 0 and 100, Inclusive, Using Default Value For MinFlowPercent");
-
-                    else
-                        flowMaths.minFlowPercent = MathF.Round((float)userMinFlowPercent / 100f, 2);
-                }
-                
-                else if(args[i][0] == 'D')
-                {
-                    Int32 userFlowDropOff = Convert.ToInt32(args[i].Substring(1));
-
-                    // Check userFlowDropOff is a multiple of 2
-                    if(userFlowDropOff % 2 != 0)   
-                        errorLogger.AddToLog($"{args[i]} Needs To Be A Multiple Of 2, Using Default Value");
-
-                    // Check userFlowDropOff is a positive multiple of 2
-                    else if(userFlowDropOff < 2)   
-                        errorLogger.AddToLog($"{args[i]} Needs To Be A Positive Multiple Of 2, Using Default Value");
-                    
-                    else
-                        flowMaths.flowDropOff = userFlowDropOff;
-                }
-            }
-            catch(FormatException)
-            {
-                errorLogger.AddToLog($"{args[i]} Parameter Not In Correct format, Using Default Value!");
-            }
-        }
 
         // Get gcode file path from arguments and create temp gcode file
         string slicerGcodeFilePath = args[^1];
@@ -154,6 +105,7 @@ class Program
                     {
                         double oldFlowVal = -1f;
                         double newFlowVal = -1f;
+                        double extrusionLength = -1f;
 
                         // Break GCodeLine Into It's Segments
                         string[] gcodeLineSegments = GCodeLine.Trim().Split(' ');
@@ -167,8 +119,13 @@ class Program
                                 // Try convert e value and update newFlowVal and oldFlowVal
                                 if(double.TryParse(gcodeLineSegments[i].Substring(1), out oldFlowVal))
                                 {
-                                    newFlowVal = flowMaths.ModifyFlow(flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos), oldFlowVal);
-                                    gcodeLineSegments[i] = "E" + newFlowVal.ToString("N5");
+                                    extrusionLength = flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos);
+
+                                    if(extrusionLength < flowMaths.maxModifiedLength())
+                                    {
+                                        newFlowVal = flowMaths.ModifyFlow(extrusionLength, oldFlowVal);
+                                        gcodeLineSegments[i] = "E" + newFlowVal.ToString("N5");
+                                    }
                                 }
                                 else
                                     errorLogger.AddToLog($"Unable to convert {gcodeLineSegments[i].Substring(1)} to double");
@@ -177,10 +134,7 @@ class Program
 
                         // Modify E value if it's been changed (doesn't modify retraction stuff)
                         if (oldFlowVal > 0 && oldFlowVal != newFlowVal)
-                        {
-                            //GCodeLine = $"\n; Old Flow Value: {oldFlowVal}\n; Tool at: X{currentToolPos.X} Y{currentToolPos.Y}\n; Was at: X{previousToolPos.X} Y{previousToolPos.Y}\n\n" + String.Join(' ', gcodeLineSegments) +"\n";
-                            GCodeLine = String.Join(' ', gcodeLineSegments) + $"; Old Flow Value: {oldFlowVal}";
-                        }
+                            GCodeLine = String.Join(' ', gcodeLineSegments) + $"; Old Flow Value: {oldFlowVal}   Length: {extrusionLength.ToString("N5")}";
                     }
                     previousToolPos = currentToolPos;
 
@@ -236,7 +190,7 @@ class ErrorLogger
         try
         {
             // Add text to the log file at logFilePath
-            File.AppendAllText(logFilePath, $"{DateTime.Now}: {msg}");
+            File.AppendAllText(logFilePath, $"\n{DateTime.Now}: {msg}");
         }
         catch (Exception ex)
         {
@@ -250,35 +204,110 @@ class ErrorLogger
 class FlowMaths
 {
     private ErrorLogger errorLogger;
+    private List<double> eLengths = new(), flowComps = new();
+    private CubicSpline flowModel;
+
+    // Constructor for flow maths
     public FlowMaths(ErrorLogger _errorLogger)
     {
+        // Assign errorLogger for later user by flow maths object
         errorLogger = _errorLogger;
+
+        string eLengthPattern = @"^\d+(\.\d+)?$";
+        string flowCompPattern = @"^(0(\.\d+)?|1(\.0+)?)$";
+
+        string scriptDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        string modelParametersPath = Path.Combine(scriptDirectory, "model.txt");
+
+        try
+        {
+            using (StreamReader reader = new(modelParametersPath))
+            {
+                string? modelParameterLine;
+                while ((modelParameterLine = reader.ReadLine()) != null)
+                {
+                    errorLogger.AddToLog(modelParameterLine);
+                    string[] lineParts = modelParameterLine.Trim().Split(',');
+
+                    // Check line has right amount of parts
+                    if(lineParts.Count() > 2 || lineParts.Count() == 0)
+                    {
+                        errorLogger.AddToLog($"Incorrect format of parameter line in model.txt");
+                        Environment.Exit(6);
+                    }
+
+                    if(Regex.IsMatch(lineParts[0].Trim(), eLengthPattern))
+                        eLengths.Add(Convert.ToDouble(lineParts[0].Trim()));
+                    else
+                    {
+                        errorLogger.AddToLog($"Incorrect format of eLength in model.txt: {lineParts[0].Trim()}");
+                        Environment.Exit(3);
+                    }
+
+                    if(Regex.IsMatch(lineParts[1].Trim(), flowCompPattern))
+                        flowComps.Add(Convert.ToDouble(lineParts[1].Trim()));
+                    else
+                    {
+                        errorLogger.AddToLog($"Incorrect format of flowComp in model.txt: {lineParts[1].Trim()}");
+                        Environment.Exit(4);
+                    }                 
+                }
+            }
+
+            if(eLengths[0] != 0.0 || flowComps[^1] != 1.0f)
+            {
+                errorLogger.AddToLog("First E length must be 0.0 and last flowComp must be 1.0");
+                Environment.Exit(7);
+            }
+
+            if(eLengths.Count() < 3)
+            {
+                errorLogger.AddToLog("Please specifiy atleast 3 flow model points");
+                Environment.Exit(8);
+            }
+
+        }
+        
+        catch(Exception ex){
+            errorLogger.AddToLog($"An error occured: {ex.Message}");
+            Environment.Exit(999);
+        }
+
+        flowModel = CubicSpline.InterpolateNatural(eLengths, flowComps);
     }
 
-    // Length at which extrusion modifer is no longer applied (argument e.g. L17)
-    public int maxModifiedLength = 17;
-    
-    // Min percentage flow is reduced to (argument e.g. F30)
-    public double minFlowPercent = 0.3f; 
+    public double maxModifiedLength()
+    {
+        return eLengths[^1];
+    }
 
-    // How exponential the flow drop off is (multiple of 2) (argument e.g. D12)
-    public int flowDropOff = 12;
-
-    // Retursn the parameters used by the flow model
+    // Returns the parameters used by the flow model
     public string ReturnFlowModelParameters()
     {
-        string msg = $"\n; MaxModifiedLength: {maxModifiedLength}\n; MinFlowPercent: " + minFlowPercent.ToString("N2") + $"\n; FlowDropOff: {flowDropOff}\n";
-        return msg;
+        string msg = "\n; Flow Comp Model Points:";
+        for(int index = 0; index < eLengths.Count(); index++)
+        {
+            msg += $"\n; ({eLengths[index]}, {flowComps[index]})";
+        }
+        return msg + "\n";
     }
 
-    // The maths doing the flow compensation
+    // Returns flow multiplier value from flow model
     private double flowCompModel(double extrusionLength)
     {
-        if(extrusionLength == 0 || extrusionLength > maxModifiedLength)
-            return 1;
+        if(extrusionLength < 0.0)
+        {
+            errorLogger.AddToLog("Tried to apply flow comp to extrusion length < 0");
+            Environment.Exit(999);
+        }
 
-        double magicNumber = (minFlowPercent-1) * Math.Pow(maxModifiedLength, -1 * flowDropOff);
-        return magicNumber * Math.Pow(extrusionLength-maxModifiedLength, flowDropOff) + 1;
+        if(extrusionLength > eLengths[^1])
+        {
+            errorLogger.AddToLog($"Tried to apply flow comp to extrusion length > max flow comp length: {eLengths[^1]}");
+            return 1;
+        }
+
+        return flowModel.Interpolate(extrusionLength);
     }
 
     // Applies flow compensation model
