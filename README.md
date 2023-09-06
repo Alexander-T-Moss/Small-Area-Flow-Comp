@@ -41,7 +41,9 @@ This screenshot shows what is going on really well. The flow is visualized as th
 
 # How Do I Use This Script
 
-The first thing you need is the script for your relevant platform (`win`, `osx_intel`, `osx_arm`, `linux`), so download the one you need from the latest release. When saving it on your computer, the file path to the script **cannot have spaces in it**, so any folders it goes in cannot have spaces, then follow the steps for your relevant slicer below:
+The first thing you need is the program for your relevant platform (`win`, `osx_intel`, `osx_arm`, `linux`), so download the one you need from the latest release. While you're there, you also need to download the `model.txt` file!
+
+When saving the program/model.txt (both need to be in the same folder) on your computer, the file path to the script/model.txt **cannot have spaces in it**, so any folders it goes in cannot have spaces in their name, then follow the steps for your relevant slicer below:
 
 
 
