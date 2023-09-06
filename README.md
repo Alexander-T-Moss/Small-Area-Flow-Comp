@@ -14,7 +14,7 @@ Use this script at your own risk. It has been tested to a point where I feel it 
 
 ![demo_cw1_body](/Screenshots/demo_cw1_body.png)
 
-The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode (*the areas that are more blue have less flow*) This screenshot very clearly shows the script at work
+The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode (*the areas that are more blue have less flow*) This screenshot very clearly shows the script at work. **Slicers also only run the script on exporting the gcode file, so you will need to import the exported gcode file to see anything!!**
 
 
 
