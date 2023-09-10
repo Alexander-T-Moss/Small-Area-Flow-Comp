@@ -7,6 +7,8 @@
 // 6 - Issue with line parts count in model.txt //
 // 7 - First/Last flow model values incorrect   //
 // 8 - Not enough flow model points (min. 3)    //
+// 9 - Flow comp applied to negative number     //
+// 10 - Issue creating model.txt file           //
 //                                              //
 // 999 - Check Log, Unknown Error               //
 
@@ -14,11 +16,11 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using MathNet.Numerics.Interpolation;
 
-class Program
+partial class Program
 {   
     // Version Variables
-    string FlowCompScriptVer = "V0.7.0";
-    string FlowModelVer = "V0.2.0";
+    string FlowCompScriptVer = "V0.7.1";
+    string FlowModelVer = "V0.2.1";
     string ErrorLoggerVer = "V0.0.1";
 
     // Create header for top of gcode file
@@ -55,12 +57,12 @@ class Program
         string[] slicerGenericFlags = { ";TYPE:" , "; FEATURE:"};
 
         // Regex pattern to check if gcode lines and segments
-        Regex gcodeLineOfInterest = new Regex(@"[XYE][\d]+(?:\.\d+)?"); // Contains either XYZ followed by number
-        Regex extrusionMovePattern = new Regex(@"^E(?:0\.\d+|\.\d+|[1-9]\d*|\d+\.\d+)$"); // E Followed by a non negative decimal
+        Regex gcodeLineOfInterest = MyRegex1(); // Contains either XYZ followed by number
+        Regex extrusionMovePattern = MyRegex(); // E Followed by a non negative decimal
 
         // Initiate FlowMaths and copy of Program
         FlowMaths flowMaths = new(errorLogger);
-        Program program = new Program();
+        Program program = new();
 
         // Get gcode file path from arguments and create temp gcode file
         string slicerGcodeFilePath = args[^1];
@@ -69,6 +71,7 @@ class Program
         // Assume initial tool position is at 0,0 (sould be updated before any extrusion moves anyway)
         Vector2 previousToolPos = new(0, 0);
         bool adjustingFlow = false;
+        double extrusionLength = -1f;
         
         // Start Reading GCode File
         try{
@@ -105,36 +108,35 @@ class Program
                     {
                         double oldFlowVal = -1f;
                         double newFlowVal = -1f;
-                        double extrusionLength = -1f;
 
                         // Break GCodeLine Into It's Segments
                         string[] gcodeLineSegments = GCodeLine.Trim().Split(' ');
 
                         // Loop through each segment of gcode
-                        for (int i = 0; i < gcodeLineSegments.Count(); i++)
+                        for (int i = 0; i < gcodeLineSegments.Length; i++)
                         {
                             // Check if the segment is an extrusion move we want to modify
                             if (extrusionMovePattern.IsMatch(gcodeLineSegments[i]))
                             {
                                 // Try convert e value and update newFlowVal and oldFlowVal
-                                if(double.TryParse(gcodeLineSegments[i].Substring(1), out oldFlowVal))
+                                if(double.TryParse(gcodeLineSegments[i][1..], out oldFlowVal))
                                 {
                                     extrusionLength = flowMaths.CalcExtrusionLength(currentToolPos, previousToolPos);
 
-                                    if(extrusionLength < flowMaths.maxModifiedLength())
+                                    if(extrusionLength < flowMaths.maxModifiedLength() && extrusionLength > 0)
                                     {
                                         newFlowVal = flowMaths.ModifyFlow(extrusionLength, oldFlowVal);
                                         gcodeLineSegments[i] = "E" + newFlowVal.ToString("N5");
                                     }
                                 }
                                 else
-                                    errorLogger.AddToLog($"Unable to convert {gcodeLineSegments[i].Substring(1)} to double");
+                                    errorLogger.AddToLog($"Unable to convert {gcodeLineSegments[i][1..]} to double");
                             }
                         }
 
                         // Modify E value if it's been changed (doesn't modify retraction stuff)
                         if (oldFlowVal > 0 && oldFlowVal != newFlowVal)
-                            GCodeLine = String.Join(' ', gcodeLineSegments) + $"; Old Flow Value: {oldFlowVal}   Length: {extrusionLength.ToString("N5")}";
+                            GCodeLine = string.Join(' ', gcodeLineSegments) + $"; Old Flow Value: {oldFlowVal}   Length: {extrusionLength:N5}";
                     }
                     previousToolPos = currentToolPos;
 
@@ -157,6 +159,11 @@ class Program
             File.Delete(tempGCodeFilePath);
         }
     }
+
+    [GeneratedRegex("^E(?:0\\.\\d+|\\.\\d+|[1-9]\\d*|\\d+\\.\\d+)$")]
+    private static partial Regex MyRegex();
+    [GeneratedRegex("[XYE][\\d]+(?:\\.\\d+)?")]
+    private static partial Regex MyRegex1();
 }
 
 class ErrorLogger
@@ -206,6 +213,16 @@ class FlowMaths
     private ErrorLogger errorLogger;
     private List<double> eLengths = new(), flowComps = new();
     private CubicSpline flowModel;
+    private string[] defaultModel = {"0, 0",
+                                     "0.2, 0.4444",
+                                     "0.4, 0.6145",
+                                     "0.6, 0.7059",
+                                     "0.8, 0.7619",
+                                     "1.5, 0.8571",
+                                     "2, 0.8889",
+                                     "3, 0.9231",
+                                     "5, 0.9520",
+                                     "10, 1"};
 
     // Constructor for flow maths
     public FlowMaths(ErrorLogger _errorLogger)
@@ -216,11 +233,14 @@ class FlowMaths
         string eLengthPattern = @"^\d+(\.\d+)?$";
         string flowCompPattern = @"^(0(\.\d+)?|1(\.0+)?)$";
 
-        string scriptDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        string modelParametersPath = Path.Combine(scriptDirectory, "model.txt");
+        string modelParametersPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "model.txt");
 
         try
         {
+            // Create a model.txt file if it doesn't exist
+            if(!File.Exists(modelParametersPath))
+                createModel(modelParametersPath);
+
             using (StreamReader reader = new(modelParametersPath))
             {
                 string? modelParameterLine;
@@ -230,7 +250,7 @@ class FlowMaths
                     string[] lineParts = modelParameterLine.Trim().Split(',');
 
                     // Check line has right amount of parts
-                    if(lineParts.Count() > 2 || lineParts.Count() == 0)
+                    if(lineParts.Length > 2 || lineParts.Length == 0)
                     {
                         errorLogger.AddToLog($"Incorrect format of parameter line in model.txt");
                         Environment.Exit(6);
@@ -276,6 +296,29 @@ class FlowMaths
         flowModel = CubicSpline.InterpolateNatural(eLengths, flowComps);
     }
 
+    // Creates a default model.txt file
+    private void createModel(string directory)
+    {
+        try
+        {
+            errorLogger.AddToLog("Creating model.txt file (as one doesn't exist)");
+            using (StreamWriter writer = File.AppendText(directory))
+            {
+                foreach(string modelPoint in defaultModel)
+                {
+                    writer.WriteLine(modelPoint);
+                }
+            }
+            errorLogger.AddToLog("Succesfully created model.txt file");
+        }
+        catch (Exception ex)
+        {
+            errorLogger.AddToLog($"Error with creating model.txt file: {ex.Message}");
+            Environment.Exit(10);
+        }
+    }
+
+    // Getter for longest length in eLengths
     public double maxModifiedLength()
     {
         return eLengths[^1];
@@ -298,7 +341,7 @@ class FlowMaths
         if(extrusionLength < 0.0)
         {
             errorLogger.AddToLog("Tried to apply flow comp to extrusion length < 0");
-            Environment.Exit(999);
+            return 1;
         }
 
         if(extrusionLength > eLengths[^1])
