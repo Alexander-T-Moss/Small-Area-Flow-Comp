@@ -14,7 +14,7 @@ Use this script at your own risk. It has been tested to a point where I feel it 
 
 ![demo_cw1_body](/Screenshots/demo_cw1_body.png)
 
-The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode (*the areas that are more blue have less flow*) This screenshot very clearly shows the script at work
+The example above used very extreme parameters to show the flow compensation, you will not see this extreme in your gcode (*the areas that are more blue have less flow*) This screenshot very clearly shows the script at work. **Slicers also only run the script on exporting the gcode file, so you will need to import the exported gcode file to see anything!!**
 
 
 
@@ -41,7 +41,9 @@ This screenshot shows what is going on really well. The flow is visualized as th
 
 # How Do I Use This Script
 
-The first thing you need is the script for your relevant platform (`win`, `osx_intel`, `osx_arm`, `linux`), so download the one you need from the latest release. When saving it on your computer, the file path to the script **cannot have spaces in it**, so any folders it goes in cannot have spaces, then follow the steps for your relevant slicer below:
+The first thing you need is the program for your relevant platform (`win`, `osx_intel`, `osx_arm`, `linux`), so download the one you need from the latest release. While you're there, you also need to download the `model.txt` file!
+
+When saving the program/model.txt (both need to be in the same folder) on your computer, the file path to the script/model.txt **cannot have spaces in it**, so any folders it goes in cannot have spaces in their name, then follow the steps for your relevant slicer below:
 
 
 
