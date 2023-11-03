@@ -73,7 +73,7 @@ Ping me (*alexandertmoss*) on Discord and I'll see what can be done :)
 
 # HELP! It's Not Working 
 
-To help diagnose the issues quicker, please provide the information (*if possible*) below for your issue on the [channel in VORONDesign](https://discord.com/channels/460117602945990666/1147276713156427887). (*You'll get quicker responses there than if you submit an issue on GitHub*)
+To help diagnose the issues quicker, please provide the information (*if possible*) below for your issue on the [channel in VORONDesign](https://discord.com/channels/460117602945990666/461133450636951552). (*You'll get quicker responses there than if you submit an issue on GitHub*)
 
 
 
