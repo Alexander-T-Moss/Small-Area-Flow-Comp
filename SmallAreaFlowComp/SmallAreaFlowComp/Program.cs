@@ -61,7 +61,8 @@ partial class Program
         Regex extrusionMovePattern = MyRegex(); // E Followed by a non negative decimal
 
         // Initiate FlowMaths and copy of Program
-        FlowMaths flowMaths = new(errorLogger, args[0]);
+        string? model = Array.Find(args, s => s.EndsWith(".txt"));
+        FlowMaths flowMaths = new(errorLogger, model != null ? model: "model.txt");
         Program program = new();
 
         // Get gcode file path from arguments and create temp gcode file
@@ -225,7 +226,7 @@ class FlowMaths
                                      "10, 1"};
 
     // Constructor for flow maths
-    public FlowMaths(ErrorLogger _errorLogger, string modelName = "model.txt")
+    public FlowMaths(ErrorLogger _errorLogger, string modelName)
     {
         // Assign errorLogger for later user by flow maths object
         errorLogger = _errorLogger;
