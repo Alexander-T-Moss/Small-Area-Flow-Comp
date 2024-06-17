@@ -61,7 +61,8 @@ partial class Program
         Regex extrusionMovePattern = MyRegex(); // E Followed by a non negative decimal
 
         // Initiate FlowMaths and copy of Program
-        FlowMaths flowMaths = new(errorLogger);
+        string? model = Array.Find(args, s => s.EndsWith(".txt"));
+        FlowMaths flowMaths = new(errorLogger, model != null ? model: "model.txt");
         Program program = new();
 
         // Get gcode file path from arguments and create temp gcode file
@@ -225,7 +226,7 @@ class FlowMaths
                                      "10, 1"};
 
     // Constructor for flow maths
-    public FlowMaths(ErrorLogger _errorLogger)
+    public FlowMaths(ErrorLogger _errorLogger, string modelName)
     {
         // Assign errorLogger for later user by flow maths object
         errorLogger = _errorLogger;
@@ -233,7 +234,8 @@ class FlowMaths
         string eLengthPattern = @"^\d+(\.\d+)?$";
         string flowCompPattern = @"^(0(\.\d+)?|1(\.0+)?)$";
 
-        string modelParametersPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "model.txt");
+        string modelParametersPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, modelName);
+        errorLogger.AddToLog($"Loading model {modelName}");
 
         try
         {
@@ -252,7 +254,7 @@ class FlowMaths
                     // Check line has right amount of parts
                     if(lineParts.Length > 2 || lineParts.Length == 0)
                     {
-                        errorLogger.AddToLog($"Incorrect format of parameter line in model.txt");
+                        errorLogger.AddToLog($"Incorrect format of parameter line in {modelName}");
                         Environment.Exit(6);
                     }
 
@@ -260,7 +262,7 @@ class FlowMaths
                         eLengths.Add(Convert.ToDouble(lineParts[0].Trim()));
                     else
                     {
-                        errorLogger.AddToLog($"Incorrect format of eLength in model.txt: {lineParts[0].Trim()}");
+                        errorLogger.AddToLog($"Incorrect format of eLength in {modelName}: {lineParts[0].Trim()}");
                         Environment.Exit(3);
                     }
 
@@ -268,7 +270,7 @@ class FlowMaths
                         flowComps.Add(Convert.ToDouble(lineParts[1].Trim()));
                     else
                     {
-                        errorLogger.AddToLog($"Incorrect format of flowComp in model.txt: {lineParts[1].Trim()}");
+                        errorLogger.AddToLog($"Incorrect format of flowComp in {modelName}: {lineParts[1].Trim()}");
                         Environment.Exit(4);
                     }                 
                 }
@@ -299,9 +301,10 @@ class FlowMaths
     // Creates a default model.txt file
     private void createModel(string directory)
     {
+        string modelName = Path.GetFileName(directory);
         try
         {
-            errorLogger.AddToLog("Creating model.txt file (as one doesn't exist)");
+            errorLogger.AddToLog($"Creating {modelName} file (as one doesn't exist)");
             using (StreamWriter writer = File.AppendText(directory))
             {
                 foreach(string modelPoint in defaultModel)
@@ -309,11 +312,11 @@ class FlowMaths
                     writer.WriteLine(modelPoint);
                 }
             }
-            errorLogger.AddToLog("Succesfully created model.txt file");
+            errorLogger.AddToLog($"Succesfully created {modelName} file");
         }
         catch (Exception ex)
         {
-            errorLogger.AddToLog($"Error with creating model.txt file: {ex.Message}");
+            errorLogger.AddToLog($"Error with creating {modelName} file: {ex.Message}");
             Environment.Exit(10);
         }
     }

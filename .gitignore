@@ -41,3 +41,7 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+
+# Dev container files
+.devcontainer
+.github/dependabot.yml
