@@ -27,10 +27,5 @@ SAFC officialy supports the mainstream slicers derived from Slic3r, these being 
 > - Slice a model and export the file, if all is working correctly then a `model.txt` and `log.txt` file will be created in the same folder as the script (if they don't already exist)
 > - You won't see any changes to the gcode unless you re-import the sliced G-code file back into your slicer, as the script is ran when exporting the sliced file initially
 
-## Video By Teaching Tech
-Teaching Tech's video on SAFC has a section covering in good detail setting up the script, video below links straight to that section
-
-[![YouTube](http://i.ytimg.com/vi/1NBtx1K98RU/hqdefault.jpg)](https://www.youtube.com/watch?v=1NBtx1K98RU)
-
 ## Help! Somthing Is Not Right!
 Got hung up at a step, or something isn't acting as expected? Headover to the [troubleshooting guide](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Troubleshooting.md)
