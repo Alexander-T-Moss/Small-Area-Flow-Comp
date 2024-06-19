@@ -8,13 +8,13 @@ A general solution to combat extrusion related issues on small areas of solid in
 ![demo_cw1_body](/Screenshots/demo_cw1_body.png)
 
 
-[Setting Up The Script]()
+[Setting Up The Script](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Setup.md)
 
 [Latest Release](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/releases)
 
-[Troubleshooting Guide]()
+[Troubleshooting Guide](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Troubleshooting.md)
 
-[What Does The Script Do?]()
+[What Does The Script Do?](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Information.md)
 
 # Wonderful People (_Credits_)
 
