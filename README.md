@@ -16,6 +16,11 @@ A general solution to combat extrusion related issues on small areas of solid in
 
 [What Does The Script Do?](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Information.md)
 
+# Teaching Tech's Video On SAFC
+Teaching Tech also created a great way to [tune SAFC](https://www.printables.com/model/904788-small-area-flow-compensation-tester) which I highly recommend you spend time to check out! (Especially useful if printing with nozzles that are not the standard 0.4mm that the defaut model is based on)
+
+[![YouTube](http://i.ytimg.com/vi/1NBtx1K98RU/hqdefault.jpg)](https://www.youtube.com/watch?v=1NBtx1K98RU)
+
 # Wonderful People (_Credits_)
 
 **Weaslus**: Proof Reader, Hypeman & Pestered Me Into Making This
