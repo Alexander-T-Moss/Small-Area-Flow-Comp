@@ -19,7 +19,7 @@ Teaching Tech also created a great way to [tune SAFC](https://www.printables.com
 
 [![YouTube](http://i.ytimg.com/vi/1NBtx1K98RU/hqdefault.jpg)](https://www.youtube.com/watch?v=1NBtx1K98RU)
 
-# Wonderful People (_Credits_)
+# Wonderful People - _Credits_
 
 **Weaslus**: Proof Reader, Hypeman & Pestered Me Into Making This
 
