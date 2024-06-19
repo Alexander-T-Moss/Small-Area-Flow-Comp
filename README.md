@@ -2,7 +2,7 @@
 [![release](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/release.yml/badge.svg)](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/release.yml)
 
 
-# Small Area Flow Compenstation (_SAFC_)
+# Small Area Flow Compenstation - _SAFC_
 A general solution to combat extrusion related issues on small areas of solid infill, now available natively in the latest versions of OrcaSlicer and as a standalone script for PrusaSlicer, SuperSlicer, BambuStudio and older versions of OrcaSlicer! Display image from [Voron-Afterburner](https://github.com/VoronDesign/Voron-Afterburner/releases)
 
 ![demo_cw1_body](/Screenshots/demo_animation.gif)
