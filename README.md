@@ -2,7 +2,7 @@
 [![release](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/release.yml/badge.svg)](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/actions/workflows/release.yml)
 
 
-# Small Area Flow Compenstation - _SAFC_
+# Small Area Flow Compenstation - SAFC
 A general solution to combat extrusion related issues on small areas of solid infill, now available natively in the latest versions of OrcaSlicer and as a standalone script for PrusaSlicer, SuperSlicer, BambuStudio and older versions of OrcaSlicer! Display part from [Voron-Afterburner](https://github.com/VoronDesign/Voron-Afterburner/releases)
 
 ![demo_cw1_body](/Screenshots/demo_animation.gif)
@@ -22,7 +22,7 @@ Teaching Tech also created a great way to [tune SAFC](https://www.printables.com
 
 [![YouTube](http://i.ytimg.com/vi/1NBtx1K98RU/hqdefault.jpg)](https://www.youtube.com/watch?v=1NBtx1K98RU)
 
-# Wonderful People - _Credits_
+# Wonderful People - Credits
 
 **Weaslus**: Proof Reader, Hypeman & Pestered Me Into Making This
 
