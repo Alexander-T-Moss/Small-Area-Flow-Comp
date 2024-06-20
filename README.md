@@ -12,6 +12,10 @@ A general solution to combat extrusion related issues on small areas of solid in
 
 [Troubleshooting Guide](https://github.com/Alexander-T-Moss/Small-Area-Flow-Comp/blob/main/Troubleshooting.md)
 
+# Print Showcase
+Thanks to all the wonderful people that went above and beyond during the initial beta testing of SAFC. Below is a collage of some great prints people got using SAFC
+
+![example_print_collage](/Screenshots/Example_Print_Collage.jpg)
 
 # Teaching Tech's Video On SAFC
 Teaching Tech also created a great way to [tune SAFC](https://www.printables.com/model/904788-small-area-flow-compensation-tester) which I highly recommend you spend time to check out! (Especially useful if printing with nozzles that are not the standard 0.4mm that the defaut model is based on)
@@ -27,5 +31,3 @@ Teaching Tech also created a great way to [tune SAFC](https://www.printables.com
 **Donut Man**: Another Hypeman, Well I'm Not Sure If He's Old Enough To Be A Hypeman, Maybe A Hypeboy
 
 **Mjonuschat**: Ported SAFC Into OrcaSlicer, That Then Got Merged Into The Latest Versions Of OrcaSlicer
-
-**Voron Community**: A huge thanks to everyone that helped test this initially and put up with all the iniital bugs that needed squashing!
