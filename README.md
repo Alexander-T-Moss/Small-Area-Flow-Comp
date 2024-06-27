@@ -30,4 +30,6 @@ Teaching Tech also created a great way to [tune SAFC](https://www.printables.com
 
 **Donut Man**: Another Hypeman, Well I'm Not Sure If He's Old Enough To Be A Hypeman, Maybe A Hypeboy
 
-**Mjonuschat**: Ported SAFC Into OrcaSlicer, That Then Got Merged Into The Latest Versions Of OrcaSlicer
+[@mjonuschat](https://github.com/mjonuschat): Ported SAFC Into OrcaSlicer, That Then Got Merged Into The Latest Versions Of OrcaSlicer
+
+[@TheSlashEffect](https://github.com/TheSlashEffect): Porting SAFC Into Superslicer, Pending Merge Into Latest Versions Of SuperSlicer
