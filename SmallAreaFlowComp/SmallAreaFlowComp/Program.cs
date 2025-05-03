@@ -44,11 +44,13 @@ partial class Program
         ErrorLogger errorLogger = new ErrorLogger("log.txt");
 
         // Flags that are checked for in slicer gcode (for ares to modify)
+        // Cura knows: FILL, SKIN, SKIRT, SUPPORT, SUPPORT-INTERFACE, WALL-INNER and WALL-OUTER (where brim is also SKIRT)
         string[] slicerInfillFlags = { ";TYPE:Solid infill",
                                        ";TYPE:Top solid infill",
                                        ";TYPE:Internal solid infill",
                                        ";TYPE:Top surface", 
                                        ";TYPE:Bottom surface",
+                                       ";TYPE:SKIN",
                                        "; FEATURE: Top surface",
                                        "; FEATURE: Internal solid infill",
                                        "; FEATURE: Bottom surface"};
